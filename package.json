@@ -1,8 +1,20 @@
 {
-  "name": "dice",
+  "name": "@trepidacious/dice",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "./dist/dice.umd.cjs",
+  "module": "./dist/dice.js",
+  "types": "./dist/dice.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/dice.js",
+      "require": "./dist/dice.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -11,7 +23,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -35,6 +47,8 @@
     "eslint-plugin-storybook": "^0.6.15",
     "storybook": "^7.6.7",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vite-plugin-dts": "^3.7.0",
+    "vite-plugin-lib-inject-css": "^1.3.0"
   }
 }

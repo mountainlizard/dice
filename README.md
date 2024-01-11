@@ -1,11 +1,12 @@
-# React + TypeScript + Vite
+# Dice
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Determistic 3D dice rolling library for React.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Check out, `npm install`, `npm run build`, then `npm link` to make the package available locally. To import to another project, run `npm link @trepidacious/dice` in that project, this will add the local build `dice`, it can be imported normally.
+
+After changing `dice` code, run `npm run build` again, changes should be available in any linked projects immediately.
 
 ## Expanding the ESLint configuration
 
