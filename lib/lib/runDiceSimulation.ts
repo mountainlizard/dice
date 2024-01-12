@@ -5,9 +5,43 @@ import { toQuaternion } from "./rapierToThree";
 import Rando from "./rando";
 import range from "./range";
 import rapierInit from "./rapierInit";
+
+// const boundaryThickness = 0.3;
+// const boundaryRestitution = 1.0;
+// const tableRestitution = 1.0;
+// const diceRestitution = 0.0;
+
+// const tableFriction = 0.2; //10
+// const diceFriction = 0.001; //1
+// const speedRange = 3;
+
+// const boundaryThickness = 0.3;
+// const boundaryRestitution = 1.0;
+// const tableRestitution = 1.0;
+// const diceRestitution = 0.0;
+
+// const tableFriction = 0.2; //10
+// const diceFriction = 0.05; //1
+// const speedRange = 2;
+// const velocityX = 0;
+// const velocityZ = 0;
+
+// const initialSpacing = 1.2; // 2
+
+const boundaryThickness = 0.3;
+const boundaryRestitution = 1.0;
+// const tableRestitution = 0.4;
+// const diceRestitution = 0.1;
+const tableRestitution = 0.1;
+const diceRestitution = 0.4;
+
 const tableFriction = 0.2; //10
-const diceFriction = 0.001; //1
-const speedRange = 3;
+const diceFriction = 0.05; //1
+const speedRange = 2;
+const velocityX = 0;
+const velocityZ = 0;
+
+const initialSpacing = 1.2; // 2
 
 const randomQuaternion = (r: Rando): RAPIER.Rotation => {
   // Derived from http://planning.cs.uiuc.edu/node198.html
@@ -45,14 +79,14 @@ const addDice = (
   // Create a dynamic rigid-body.
   const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic()
     .setTranslation(
-      (x - (cols - 1) / 2) * 0.4 + r.nextSymRange(0.05),
+      (x - (cols - 1) / 2) * initialSpacing * size + r.nextSymRange(0.05),
       0.6,
-      (y - (cols - 1) / 2) * 0.4 + r.nextSymRange(0.05)
+      (y - (cols - 1) / 2) * initialSpacing * size + r.nextSymRange(0.05)
     )
     .setLinvel(
-      r.nextSymRange(speedRange),
+      r.nextSymRange(speedRange) + velocityX,
       1 + r.next() * 2,
-      r.nextSymRange(speedRange)
+      r.nextSymRange(speedRange) + velocityZ
     )
     .setRotation(randomQuaternion(r))
     .setAngvel({
@@ -66,19 +100,18 @@ const addDice = (
   const halfSize = size / 2;
   const colliderDesc = RAPIER.ColliderDesc.cuboid(halfSize, halfSize, halfSize)
     .setFriction(diceFriction)
-    .setRestitution(0.0);
+    .setRestitution(diceRestitution);
   world.createCollider(colliderDesc, rigidBody);
 
   return rigidBody;
 };
 
-const boundaryThickness = 0.3;
-
 const addBoundaries = (world: RAPIER.World) => {
-  const groundColliderDesc = RAPIER.ColliderDesc.cuboid(20.0, 1, 20.0)
+  const tableColliderDesc = RAPIER.ColliderDesc.cuboid(20.0, 1, 20.0)
     .setTranslation(0, -1, 0)
+    .setRestitution(tableRestitution)
     .setFriction(tableFriction);
-  world.createCollider(groundColliderDesc);
+  world.createCollider(tableColliderDesc);
 
   const wall1ColliderDesc = RAPIER.ColliderDesc.cuboid(
     boundaryThickness,
@@ -86,6 +119,7 @@ const addBoundaries = (world: RAPIER.World) => {
     20.0
   )
     .setTranslation(1, -1, 0)
+    .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall1ColliderDesc);
 
@@ -95,6 +129,7 @@ const addBoundaries = (world: RAPIER.World) => {
     20.0
   )
     .setTranslation(-1, -1, 0)
+    .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall2ColliderDesc);
 
@@ -104,6 +139,7 @@ const addBoundaries = (world: RAPIER.World) => {
     boundaryThickness
   )
     .setTranslation(0, -1, 1)
+    .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall3ColliderDesc);
 
@@ -113,6 +149,7 @@ const addBoundaries = (world: RAPIER.World) => {
     boundaryThickness
   )
     .setTranslation(0, -1, -1)
+    .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall4ColliderDesc);
 };
