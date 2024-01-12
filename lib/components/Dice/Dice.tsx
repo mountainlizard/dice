@@ -1,9 +1,8 @@
 import { Suspense, useRef, useState, useEffect, forwardRef } from "react";
 
-// import { Environment, useGLTF } from "@react-three/drei";
-import { useGLTF } from "@react-three/drei";
+import { Environment, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-// import { suspend } from "suspend-react";
+import { suspend } from "suspend-react";
 import {
   BufferGeometry,
   Group,
@@ -22,20 +21,24 @@ import {
 import { lerp } from "three/src/math/MathUtils.js";
 
 // forest, sunset, city and apartment are candidates here
-// const env = import("@pmndrs/assets/hdri/forest.exr").then(
-//   (module) => module.default
-// );
+const env = import("@pmndrs/assets/hdri/forest.exr").then(
+  (module) => module.default
+);
 
-const shadowColor = "#2e262e"; //#2e262e
+const defaultShadowColor = "#2e262e";
 
-function Plane() {
+interface PlaneProps {
+  shadowColor?: string;
+}
+
+const Plane = ({ shadowColor }: PlaneProps) => {
   return (
     <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
       <planeGeometry args={[5, 5]} />
-      <shadowMaterial color={shadowColor} />
+      <shadowMaterial color={shadowColor ?? defaultShadowColor} />
     </mesh>
   );
-}
+};
 
 interface DieProps {
   size: number;
@@ -216,6 +219,7 @@ export interface DiceProps {
   disadvantage?: boolean;
   seed: number;
   desiredRolls?: number[];
+  shadowColor?: string;
 }
 
 export const Dice = ({
@@ -225,6 +229,7 @@ export const Dice = ({
   disadvantage,
   seed,
   desiredRolls,
+  shadowColor,
 }: DiceProps) => {
   const maxTicks = 600;
   const [sim, setSim] = useState<DiceSimulation | null>(null);
@@ -261,14 +266,14 @@ export const Dice = ({
           shadow-mapSize-width={1024}
           shadow-radius={0.1}
           shadow-bias={-0.0001}
-          intensity={3.0}
+          intensity={0.0}
         />
 
-        {/* <Environment files={suspend(env) as string} /> */}
+        <Environment files={suspend(env) as string} />
         {/* <Environment preset="city" /> */}
         {/* <Environment preset="apartment" /> */}
 
-        <Plane />
+        <Plane shadowColor={shadowColor} />
         {sim && (
           <DicePlayback
             gildedCount={gildedCount}
