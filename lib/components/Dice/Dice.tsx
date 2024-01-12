@@ -78,7 +78,7 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
       <group ref={ref}>
         <mesh
           quaternion={meshQuaternion}
-          scale={[0.45 * size, 0.45 * size, 0.45 * size]}
+          scale={[0.5 * size, 0.5 * size, 0.5 * size]}
           castShadow
           receiveShadow
           geometry={geometry}
