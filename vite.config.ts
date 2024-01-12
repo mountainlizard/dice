@@ -19,6 +19,7 @@ export default defineConfig({
       entry: resolve(__dirname, "lib/index.ts"),
       name: "dice",
       fileName: "dice",
+      formats: ["es"],
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -32,16 +33,6 @@ export default defineConfig({
         "@react-three/fiber",
         "three",
       ],
-      output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
-          three: "THREE",
-          "@dimforge/rapier3d-compat": "RAPIER",
-        },
-      },
     },
   },
 });

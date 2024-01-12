@@ -3,13 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/dice.umd.cjs",
   "module": "./dist/dice.js",
   "types": "./dist/dice.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/dice.js",
-      "require": "./dist/dice.umd.cjs"
+      "import": "./dist/dice.js"
     }
   },
   "files": [
