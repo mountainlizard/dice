@@ -29,14 +29,14 @@ import rapierInit from "./rapierInit";
 // const initialSpacing = 1.2; // 2
 
 const boundaryThickness = 0.3;
-const boundaryRestitution = 1.0;
+const boundaryRestitution = 0.5;
 // const tableRestitution = 0.4;
 // const diceRestitution = 0.1;
 const tableRestitution = 0.1;
 const diceRestitution = 0.4;
 
 const tableFriction = 0.2; //10
-const diceFriction = 0.05; //1
+const diceFriction = 0.04; //1
 const speedRange = 2;
 const velocityX = 0;
 const velocityZ = 0;
