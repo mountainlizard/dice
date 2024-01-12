@@ -1,23 +1,19 @@
-import { useState } from "react";
-import "./App.css";
+import { Dice } from "../lib/components/Dice/Dice";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <h1>Dice</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div style={{ width: 400, height: 400 }}>
+        <Dice
+          size={0.2}
+          count={6}
+          gildedCount={3}
+          seed={1}
+          disadvantage={false}
+          desiredRolls={[6, 6, 6, 6, 6, 6]}
+        />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   );
 }
