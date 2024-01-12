@@ -38,6 +38,8 @@ export default defineConfig({
         globals: {
           react: "React",
           "react-dom": "ReactDOM",
+          three: "THREE",
+          "@dimforge/rapier3d-compat": "RAPIER",
         },
       },
     },
