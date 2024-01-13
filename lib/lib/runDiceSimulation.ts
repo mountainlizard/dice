@@ -32,8 +32,8 @@ const boundaryThickness = 0.3;
 const boundaryRestitution = 0.5;
 // const tableRestitution = 0.4;
 // const diceRestitution = 0.1;
-const tableRestitution = 0.1;
-const diceRestitution = 0.4;
+const tableRestitution = 0.2;
+const diceRestitution = 0.2;
 
 const tableFriction = 0.2; //10
 const diceFriction = 0.04; //1
