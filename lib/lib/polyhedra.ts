@@ -1,6 +1,6 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 import range from "./range";
-import { Vector3 } from "three";
+import { Quaternion, Vector3 } from "three";
 
 // The data in this file is taken from blender meshes for the relevant
 // polyhedra.
@@ -182,7 +182,9 @@ export type DiceType = "D6" | "D20";
 
 export const d20DiceInfo: DiceInfo = {
   type: "D20",
-  faceValues: range(20).map((value) => value + 1),
+  faceValues: [
+    17, 3, 7, 1, 19, 16, 10, 15, 13, 9, 8, 12, 5, 11, 6, 20, 2, 18, 4, 14,
+  ],
   faceInfo: icosahedronFaceInfo,
   colliderDescFromSize: (size: number) =>
     RAPIER.ColliderDesc.convexMesh(icosahedronCollisionMeshVertices(size))!,
@@ -210,4 +212,173 @@ export type DiceSetInfo = Record<DiceType, DiceInfo>;
 export const diceSetInfo: DiceSetInfo = {
   D6: d6DiceInfo,
   D20: d20DiceInfo,
+};
+
+export const rotationToFaceUpIndex = (
+  diceType: DiceType,
+  quaternion: Quaternion
+) => {
+  const diceInfo = diceSetInfo[diceType];
+
+  let maxY = -10;
+  let faceUpIndex = 0;
+
+  const faceVector = new Vector3();
+  for (let faceIndex = 0; faceIndex < diceInfo.faceInfo.length; faceIndex++) {
+    const faceCenterVector = diceInfo.faceInfo[faceIndex].center;
+    faceVector.copy(faceCenterVector);
+    faceVector.applyQuaternion(quaternion);
+    if (faceVector.y > maxY) {
+      maxY = faceVector.y;
+      faceUpIndex = faceIndex;
+    }
+  }
+
+  return faceUpIndex;
+};
+
+/**
+ * Set a quaternion to the rotation needed to rotate vFrom over vTo
+ * Note this is nearly the same as the three.js method, but we use
+ * a limit of `Number.EPSILON * 5` to detect opposite vectors, the
+ * three.js code can end up with exactly Number.EPSILON from two
+ * opposite vectors, and as a result incorrectly give the identity
+ * rotation.
+ * @param q 		The quaternion to set
+ * @param vFrom From vector
+ * @param vTo 	To Vector
+ * @returns 		The quaternion
+ */
+export const setFromUnitVectors = (
+  q: Quaternion,
+  vFrom: Vector3,
+  vTo: Vector3
+) => {
+  // assumes direction vectors vFrom and vTo are normalized
+
+  let r = vFrom.dot(vTo) + 1;
+  let qx = 0;
+  let qy = 0;
+  let qz = 0;
+  let qw = 0;
+
+  if (r < Number.EPSILON * 5) {
+    // vFrom and vTo point in opposite directions
+
+    r = 0;
+
+    if (Math.abs(vFrom.x) > Math.abs(vFrom.z)) {
+      qx = -vFrom.y;
+      qy = vFrom.x;
+      qz = 0;
+      qw = r;
+    } else {
+      qx = 0;
+      qy = -vFrom.z;
+      qz = vFrom.y;
+      qw = r;
+    }
+  } else {
+    // crossVectors( vFrom, vTo ); // inlined to avoid cyclic dependency on Vector3
+
+    qx = vFrom.y * vTo.z - vFrom.z * vTo.y;
+    qy = vFrom.z * vTo.x - vFrom.x * vTo.z;
+    qz = vFrom.x * vTo.y - vFrom.y * vTo.x;
+    qw = r;
+  }
+
+  q.set(qx, qy, qz, qw);
+
+  return q.normalize();
+};
+
+/**
+ * Find the rotation (as a quaternion) to apply so that the specified
+ * "from" face will be aligned where the "to" face was before rotation.
+ * So e.g. if faceFrom is 3 and faceTo is 5, we will return a rotation
+ * that will move face 3 to where face 5 started.
+ * This is used to "pre-determine" a die roll - if we know that a simulation
+ * led to face 5 being on top when the die settled, but we want to roll a
+ * 3, we pre-apply quaternionForFaceUpIndex(diceType, 3, 5) to the mesh displayed,
+ * and 3 will then appear to end up on top (since 3 has been moved to where 5 was,
+ * and 5 was pre-determined to end up on top).
+ * @param diceType 		The type of dice, to look up FaceInfo
+ * @param faceFrom		The index of the face that will end up where faceTo was
+ * 										before rotation
+ * @param faceTo			The index of the face that acts as a target for faceFrom
+ */
+export const rotateFaceToFace = (
+  diceType: DiceType,
+  faceFrom: number,
+  faceTo: number,
+  quaternion: Quaternion
+) => {
+  const faceInfo = diceSetInfo[diceType].faceInfo;
+
+  // Work out the rotation to place the center of the "from" face
+  // at the center of the "to" face.
+  const fromFaceCenterNorm = new Vector3();
+  const toFaceCenterNorm = new Vector3();
+  fromFaceCenterNorm.copy(faceInfo[faceFrom].center);
+  toFaceCenterNorm.copy(faceInfo[faceTo].center);
+  fromFaceCenterNorm.normalize();
+  toFaceCenterNorm.normalize();
+  setFromUnitVectors(quaternion, fromFaceCenterNorm, toFaceCenterNorm);
+
+  // We're now out only by a rotation around the axis between the
+  // origin and the center of the "to" face, since the centers are
+  // aligned. So we want to work out the rotation angle.
+
+  // To do this, we use the vector from the center of each face to
+  // a corner (any corner is fine for equilateral faces, for other
+  // shapes like D10 we need to use the "same" corner, e.g. the one
+  // with the smallest angle) - call this the face "u" vector.
+
+  // First we get u vector for the "to" face. Then we transform the
+  // corner position of the "from" face by the initial meshQuaternion,
+  // and this lets use find the u vector for the from face. We can then
+  // find the angle between the two u vectors, and rotate by minus this
+  // around the center vector to get where we need to be.
+
+  const fromFaceCenter = new Vector3();
+  const toFaceCenter = new Vector3();
+  fromFaceCenter.copy(faceInfo[faceFrom].center);
+  toFaceCenter.copy(faceInfo[faceTo].center);
+
+  // First step of u for "from" face - rotate corner vector of from
+  // face by initial meshQuaternion to get where corner ends up.
+  const fromFaceU = new Vector3();
+  fromFaceU.copy(faceInfo[faceFrom].corner);
+  fromFaceU.applyQuaternion(quaternion);
+
+  // The "from" face center ends up at the "to" face center after
+  // rotation, so subtract this to get the "u" vector for the
+  // rotated "from" face
+  fromFaceU.sub(toFaceCenter);
+
+  const toFaceU = new Vector3();
+  toFaceU.copy(faceInfo[faceTo].corner);
+  toFaceU.sub(toFaceCenter);
+
+  // Find required rotation angle about "to" face center
+  const angle = fromFaceU.angleTo(toFaceU);
+
+  // Last wrinkle - we need the signed rotation, we can
+  // use the cross product of the face center and the "to"
+  // u vector to work out which "side" the angle is on, and
+  // dot product it with the "from" u vector to find the sign of
+  // the angle.
+  const direction = toFaceCenter.cross(toFaceU).dot(fromFaceU);
+
+  const centerRotation = new Quaternion();
+  centerRotation.setFromAxisAngle(
+    toFaceCenterNorm,
+    angle * Math.sign(direction) * -1
+  );
+
+  // Add the rotation about face center to the initial rotation,
+  // to give the whole rotation
+  quaternion.premultiply(centerRotation);
+
+  return quaternion;
 };

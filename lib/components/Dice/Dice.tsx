@@ -9,16 +9,12 @@ import {
   NormalBufferAttributes,
   Object3DEventMap,
   Quaternion,
-  Vector3,
 } from "three";
 
 import range from "../../lib/range";
-import {
-  runDiceSimulation,
-  DiceSimulation,
-  setFaceVector,
-} from "../../lib/runDiceSimulation";
+import { runDiceSimulation, DiceSimulation } from "../../lib/runDiceSimulation";
 import { lerp } from "three/src/math/MathUtils.js";
+import { DiceType, diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
 
 // forest, sunset, city and apartment are candidates here
 const env = import("@pmndrs/assets/hdri/forest.exr").then(
@@ -41,6 +37,7 @@ const Plane = ({ shadowColor }: PlaneProps) => {
 };
 
 interface DieProps {
+  type: DiceType;
   size: number;
   gilded?: boolean | undefined;
   disadvantage?: boolean;
@@ -50,33 +47,37 @@ interface DieProps {
 useGLTF.preload("/models/D6PlainEmbossed.glb");
 useGLTF.preload("/models/D6GildedEmbossedFine2.glb");
 useGLTF.preload("/models/D6DisadvantageEmbossedRipple.glb");
-// useGLTF.preload("/models/D20Gilded.glb");
+useGLTF.preload("/models/D20Gilded.glb");
 
 const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
-  ({ size, gilded, disadvantage, meshQuaternion }, ref) => {
+  ({ type, size, gilded, disadvantage, meshQuaternion }, ref) => {
     const d6Plain = useGLTF("/models/D6PlainEmbossed.glb");
     const d6Gilded = useGLTF("/models/D6GildedEmbossedFine2.glb");
     const d6Disadvantage = useGLTF("/models/D6DisadvantageEmbossedRipple.glb");
-    // const d20Gilded = useGLTF("/models/D20Gilded.glb");
+    const d20Gilded = useGLTF("/models/D20Gilded.glb");
 
-    const model = disadvantage
-      ? d6Disadvantage.nodes.D6DisadvantageEmbossedRipple
-      : gilded
-      ? d6Gilded.nodes.D6GildedRough
-      : d6Plain.nodes.D6PlainEmbossed;
-    // : d20Gilded.nodes.D20Gilded;
+    const model =
+      type == "D20"
+        ? d20Gilded.nodes.D20Gilded
+        : disadvantage
+        ? d6Disadvantage.nodes.D6DisadvantageEmbossedRipple
+        : gilded
+        ? d6Gilded.nodes.D6GildedRough
+        : d6Plain.nodes.D6PlainEmbossed;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const geometry = (model as any)[
       "geometry"
     ] as BufferGeometry<NormalBufferAttributes>;
 
-    const material = disadvantage
-      ? d6Disadvantage.materials.DisadvantageEmbossedRippleMaterial
-      : gilded
-      ? d6Gilded.materials.GildedRoughMaterial
-      : d6Plain.materials.PlainEmbossedMaterial;
-    // : d20Gilded.materials.D20Gilded;
+    const material =
+      type == "D20"
+        ? d20Gilded.materials.D20Gilded
+        : disadvantage
+        ? d6Disadvantage.materials.DisadvantageEmbossedRippleMaterial
+        : gilded
+        ? d6Gilded.materials.GildedRoughMaterial
+        : d6Plain.materials.PlainEmbossedMaterial;
 
     return (
       <group ref={ref}>
@@ -125,6 +126,7 @@ const physicsFrameRate = 60;
 
 interface DicePlaybackProps {
   sim: DiceSimulation;
+  diceTypes: DiceType[];
   gildedCount: number;
   disadvantage?: boolean;
   desiredRolls?: number[];
@@ -133,6 +135,7 @@ interface DicePlaybackProps {
 
 const DicePlayback = ({
   sim,
+  diceTypes,
   gildedCount,
   disadvantage,
   desiredRolls,
@@ -172,10 +175,6 @@ const DicePlayback = ({
     }
   });
 
-  // Reuse mutable vectors for each die
-  const desiredFaceVector = new Vector3();
-  const actualFaceVector = new Vector3();
-
   return (
     <>
       {/* Render each die */}
@@ -185,25 +184,32 @@ const DicePlayback = ({
         // the Die
         const meshQuaternion = new Quaternion();
 
+        const diceType = diceTypes[diceIndex];
+        const diceInfo = diceSetInfo[diceType];
+
         // If we have a valid desired roll for this die,
         // rotate the mesh inside the group so that the desired face
         // will point upwards at the end of the simulation
         const desiredRoll = desiredRolls ? desiredRolls[diceIndex] : null;
-        if (desiredRoll && desiredRoll >= 1 && desiredRoll <= 6) {
-          setFaceVector(desiredFaceVector, desiredRoll - 1);
-          setFaceVector(
-            actualFaceVector,
-            sim.diceHistories[diceIndex].faceUpIndex
+        if (desiredRoll) {
+          const desiredFaceIndex = diceInfo.faceValues.findIndex(
+            (faceValue) => faceValue == desiredRoll
           );
-          meshQuaternion.setFromUnitVectors(
-            desiredFaceVector,
-            actualFaceVector
-          );
+          if (desiredFaceIndex > -1) {
+            const faceUpIndex = sim.diceHistories[diceIndex].faceUpIndex;
+            rotateFaceToFace(
+              diceType,
+              desiredFaceIndex,
+              faceUpIndex,
+              meshQuaternion
+            );
+          }
         }
 
         return (
           <Die
             key={diceIndex}
+            type={diceType}
             ref={(el) => (diceGroups.current[diceIndex] = el)}
             gilded={gildedCount > diceIndex}
             disadvantage={disadvantage}
@@ -218,7 +224,7 @@ const DicePlayback = ({
 
 export interface DiceProps {
   size: number;
-  count: number;
+  diceTypes: DiceType[];
   gildedCount: number;
   disadvantage?: boolean;
   seed: number;
@@ -228,7 +234,7 @@ export interface DiceProps {
 
 export const Dice = ({
   size,
-  count,
+  diceTypes,
   gildedCount,
   disadvantage,
   seed,
@@ -239,8 +245,8 @@ export const Dice = ({
   const [sim, setSim] = useState<DiceSimulation | null>(null);
 
   useEffect(() => {
-    runDiceSimulation(size, count, seed, maxTicks).then((s) => setSim(s));
-  }, [size, count, seed]);
+    runDiceSimulation(size, diceTypes, seed, maxTicks).then((s) => setSim(s));
+  }, [size, diceTypes, seed]);
 
   // The (react-three-fiber) time the current simulation started playing, or null
   // if it has not yet started
@@ -280,6 +286,7 @@ export const Dice = ({
         <Plane shadowColor={shadowColor} />
         {sim && (
           <DicePlayback
+            diceTypes={diceTypes}
             gildedCount={gildedCount}
             disadvantage={disadvantage}
             sim={sim}

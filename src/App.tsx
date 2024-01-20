@@ -1,5 +1,6 @@
 import { Suspense, useState } from "react";
 import { Dice } from "../lib/components/Dice/Dice";
+import range from "../lib/lib/range";
 // import { DiceAlignment } from "../lib/components/DiceAlignment";
 
 function App() {
@@ -11,11 +12,14 @@ function App() {
         <Suspense fallback={null}>
           <Dice
             size={0.1}
-            count={9}
+            diceTypes={["D20", "D20", "D6", "D6", "D6", "D6"]}
+            // diceTypes={range(20).map(() => "D20")}
             gildedCount={3}
             seed={seed}
             disadvantage={false}
-            // desiredRolls={[6, 6, 6, 6, 6, 6]}
+            desiredRolls={[20, 10, 6, 6, 6, 6]}
+            // desiredRolls={range(20).map((i) => i + 1)}
+            // desiredRolls={range(20).map(() => 20)}
           />
           {/* <DiceAlignment /> */}
         </Suspense>

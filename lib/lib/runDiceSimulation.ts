@@ -5,11 +5,7 @@ import { toQuaternion } from "./rapierToThree";
 import Rando from "./rando";
 import range from "./range";
 import rapierInit from "./rapierInit";
-import {
-  DiceType,
-  diceSetInfo,
-  icosahedronCollisionMeshVertices,
-} from "./polyhedra";
+import { DiceType, diceSetInfo, rotationToFaceUpIndex } from "./polyhedra";
 
 // const boundaryThickness = 0.3;
 // const boundaryRestitution = 1.0;
@@ -181,7 +177,7 @@ export type DiceWorld = {
 
 const createDiceWorld = (
   size: number,
-  count: number,
+  diceTypes: DiceType[],
   seed: number
 ): DiceWorld => {
   const r = new Rando(seed);
@@ -191,9 +187,9 @@ const createDiceWorld = (
 
   addBoundaries(world);
 
-  const diceBodies = range(count).map((i) =>
+  const diceBodies = diceTypes.map((type, i) =>
     // addDice(world, i, count, size, "D6", r)
-    addDice(world, i, count, size, "D6", r)
+    addDice(world, i, diceTypes.length, size, type, r)
   );
 
   return { world, diceBodies };
@@ -232,7 +228,7 @@ const setFaceVector = (v: Vector3, i: number) => {
 
 const runDiceSimulation = async (
   size: number,
-  count: number,
+  diceTypes: DiceType[],
   seed: number,
   maxTicks: number
 ): Promise<DiceSimulation> => {
@@ -240,7 +236,9 @@ const runDiceSimulation = async (
 
   const start = performance.now();
 
-  const { world, diceBodies } = createDiceWorld(size, count, seed);
+  const count = diceTypes.length;
+
+  const { world, diceBodies } = createDiceWorld(size, diceTypes, seed);
 
   const diceHistories = range(count).map(() => {
     const positions = new Array<RAPIER.Vector>(maxTicks);
@@ -265,24 +263,14 @@ const runDiceSimulation = async (
   const simTime = performance.now() - start;
 
   // Find final dice orientations
-  const faceVector = new Vector3();
   for (let dieIndex = 0; dieIndex < count; dieIndex++) {
+    const diceType = diceTypes[dieIndex];
     const diceBody = diceBodies[dieIndex];
     const rotation = diceBody.rotation();
     const diceHistory = diceHistories[dieIndex];
     const quaternion = toQuaternion(rotation);
 
-    let maxY = -10;
-    let directionUp = 0;
-    for (let directionIndex = 0; directionIndex < 6; directionIndex++) {
-      setFaceVector(faceVector, directionIndex);
-      faceVector.applyQuaternion(quaternion);
-      if (faceVector.y > maxY) {
-        maxY = faceVector.y;
-        directionUp = directionIndex;
-      }
-    }
-    diceHistory.faceUpIndex = directionUp;
+    diceHistory.faceUpIndex = rotationToFaceUpIndex(diceType, quaternion);
   }
 
   // Free world - this should free all associated objects
