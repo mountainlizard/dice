@@ -5,6 +5,11 @@ import { toQuaternion } from "./rapierToThree";
 import Rando from "./rando";
 import range from "./range";
 import rapierInit from "./rapierInit";
+import {
+  DiceType,
+  diceSetInfo,
+  icosahedronCollisionMeshVertices,
+} from "./polyhedra";
 
 // const boundaryThickness = 0.3;
 // const boundaryRestitution = 1.0;
@@ -69,6 +74,7 @@ const addDice = (
   index: number,
   count: number,
   size: number,
+  type: DiceType,
   r: Rando
 ) => {
   const cols = Math.ceil(Math.sqrt(count));
@@ -76,7 +82,9 @@ const addDice = (
   const x = index % cols;
   const y = Math.floor(index / cols);
 
-  // Create a dynamic rigid-body.
+  // Create a dynamic rigid-body,
+  // positioned in a grid by index, with randomised rotation,
+  // linear and angular velocity
   const rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic()
     .setTranslation(
       (x - (cols - 1) / 2) * initialSpacing * size + r.nextSymRange(0.05),
@@ -96,11 +104,23 @@ const addDice = (
     });
   const rigidBody = world.createRigidBody(rigidBodyDesc);
 
+  //Create a collider based on dice type
+  const colliderDesc = diceSetInfo[type].colliderDescFromSize(size);
+  colliderDesc.setFriction(diceFriction).setRestitution(diceRestitution);
+
   // Create a cuboid collider attached to the dynamic rigidBody.
-  const halfSize = size / 2;
-  const colliderDesc = RAPIER.ColliderDesc.cuboid(halfSize, halfSize, halfSize)
-    .setFriction(diceFriction)
-    .setRestitution(diceRestitution);
+  // const colliderDesc = RAPIER.ColliderDesc.cuboid(size, size, size)
+  //   .setFriction(diceFriction)
+  //   .setRestitution(diceRestitution);
+  // world.createCollider(colliderDesc, rigidBody);
+
+  // Icosahedron collider
+  // const colliderDesc = RAPIER.ColliderDesc.convexMesh(
+  //   icosahedronCollisionMeshVertices(size)
+  // )!
+  //   .setFriction(diceFriction)
+  //   .setRestitution(diceRestitution);
+
   world.createCollider(colliderDesc, rigidBody);
 
   return rigidBody;
@@ -171,7 +191,10 @@ const createDiceWorld = (
 
   addBoundaries(world);
 
-  const diceBodies = range(count).map((i) => addDice(world, i, count, size, r));
+  const diceBodies = range(count).map((i) =>
+    // addDice(world, i, count, size, "D6", r)
+    addDice(world, i, count, size, "D6", r)
+  );
 
   return { world, diceBodies };
 };
