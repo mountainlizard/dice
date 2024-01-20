@@ -1,5 +1,4 @@
 import RAPIER from "@dimforge/rapier3d-compat";
-import { Vector3 } from "three";
 
 import { toQuaternion } from "./rapierToThree";
 import Rando from "./rando";
@@ -7,32 +6,8 @@ import range from "./range";
 import rapierInit from "./rapierInit";
 import { DiceType, diceSetInfo, rotationToFaceUpIndex } from "./polyhedra";
 
-// const boundaryThickness = 0.3;
-// const boundaryRestitution = 1.0;
-// const tableRestitution = 1.0;
-// const diceRestitution = 0.0;
-
-// const tableFriction = 0.2; //10
-// const diceFriction = 0.001; //1
-// const speedRange = 3;
-
-// const boundaryThickness = 0.3;
-// const boundaryRestitution = 1.0;
-// const tableRestitution = 1.0;
-// const diceRestitution = 0.0;
-
-// const tableFriction = 0.2; //10
-// const diceFriction = 0.05; //1
-// const speedRange = 2;
-// const velocityX = 0;
-// const velocityZ = 0;
-
-// const initialSpacing = 1.2; // 2
-
 const boundaryThickness = 0.3;
 const boundaryRestitution = 0.5;
-// const tableRestitution = 0.4;
-// const diceRestitution = 0.1;
 const tableRestitution = 0.2;
 const diceRestitution = 0.2;
 
@@ -46,7 +21,6 @@ const initialSpacing = 1.2; // 2
 
 const randomQuaternion = (r: Rando): RAPIER.Rotation => {
   // Derived from http://planning.cs.uiuc.edu/node198.html
-
   const u1 = r.next();
   const sqrt1u1 = Math.sqrt(1 - u1);
   const sqrtu1 = Math.sqrt(u1);
@@ -103,19 +77,6 @@ const addDice = (
   //Create a collider based on dice type
   const colliderDesc = diceSetInfo[type].colliderDescFromSize(size);
   colliderDesc.setFriction(diceFriction).setRestitution(diceRestitution);
-
-  // Create a cuboid collider attached to the dynamic rigidBody.
-  // const colliderDesc = RAPIER.ColliderDesc.cuboid(size, size, size)
-  //   .setFriction(diceFriction)
-  //   .setRestitution(diceRestitution);
-  // world.createCollider(colliderDesc, rigidBody);
-
-  // Icosahedron collider
-  // const colliderDesc = RAPIER.ColliderDesc.convexMesh(
-  //   icosahedronCollisionMeshVertices(size)
-  // )!
-  //   .setFriction(diceFriction)
-  //   .setRestitution(diceRestitution);
 
   world.createCollider(colliderDesc, rigidBody);
 
@@ -210,22 +171,6 @@ export type DiceSimulation = {
   diceHistories: DiceHistory[];
 };
 
-const setFaceVector = (v: Vector3, i: number) => {
-  if (i === 0) {
-    v.set(0, 0, 1);
-  } else if (i === 1) {
-    v.set(0, -1, 0);
-  } else if (i === 2) {
-    v.set(1, 0, 0);
-  } else if (i === 3) {
-    v.set(-1, 0, 0);
-  } else if (i === 4) {
-    v.set(0, 1, 0);
-  } else if (i === 5) {
-    v.set(0, 0, -1);
-  }
-};
-
 const runDiceSimulation = async (
   size: number,
   diceTypes: DiceType[],
@@ -280,4 +225,4 @@ const runDiceSimulation = async (
   return { size, count, seed, ticks: tick, simTime, diceHistories };
 };
 
-export { runDiceSimulation, setFaceVector };
+export { runDiceSimulation };
