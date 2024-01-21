@@ -44,17 +44,12 @@ interface DieProps {
   meshQuaternion: Quaternion;
 }
 
-// useGLTF.preload("/models/D6PlainEmbossed.glb");
-// useGLTF.preload("/models/D6GildedEmbossedFine2.glb");
-// useGLTF.preload("/models/D6DisadvantageEmbossedRipple.glb");
-// useGLTF.preload("/models/D20Gilded.glb");
 useGLTF.preload("/D6.glb");
 useGLTF.preload("/D6Gilded.glb");
 useGLTF.preload("/D6Disadvantage.glb");
 useGLTF.preload("/D20.glb");
 useGLTF.preload("/D20Gilded.glb");
 useGLTF.preload("/D20Disadvantage.glb");
-// useGLTF.preload("/D20Untransformed.glb");
 
 const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
   ({ type, size, gilded, disadvantage, meshQuaternion }, ref) => {

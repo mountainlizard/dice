@@ -31,10 +31,10 @@ interface DieProps {
   meshQuaternion: Quaternion;
 }
 
-useGLTF.preload("/models/D20Gilded.glb");
+useGLTF.preload("/D20Gilded.glb");
 
 const Die = ({ size, meshQuaternion }: DieProps) => {
-  const d20Gilded = useGLTF("/models/D20Gilded.glb");
+  const d20Gilded = useGLTF("/D20Gilded.glb");
 
   const model = d20Gilded.nodes.D20Gilded;
 
