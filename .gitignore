@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ignore temporary blender exports - these are run through gltfjsx and moved to /public for use.
+blender/*.glb
