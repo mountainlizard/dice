@@ -18,7 +18,7 @@ export type D6Props = {
 };
 
 export const D6 = forwardRef<THREE.Group<THREE.Object3DEventMap>, D6Props>(
-  ({ scale, meshQuaternion }: D6Props, ref) => {
+  ({ scale, meshQuaternion }, ref) => {
     const { nodes, materials } = useGLTF("/D6.glb") as GLTFResult;
     return (
       <group ref={ref} dispose={null}>
