@@ -44,17 +44,19 @@ interface DieProps {
   meshQuaternion: Quaternion;
 }
 
-useGLTF.preload("/models/D6PlainEmbossed.glb");
+// useGLTF.preload("/models/D6PlainEmbossed.glb");
 useGLTF.preload("/models/D6GildedEmbossedFine2.glb");
 useGLTF.preload("/models/D6DisadvantageEmbossedRipple.glb");
 useGLTF.preload("/models/D20Gilded.glb");
+useGLTF.preload("/D6.glb");
 
 const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
   ({ type, size, gilded, disadvantage, meshQuaternion }, ref) => {
-    const d6Plain = useGLTF("/models/D6PlainEmbossed.glb");
+    // const d6Plain = useGLTF("/models/D6PlainEmbossed.glb");
     const d6Gilded = useGLTF("/models/D6GildedEmbossedFine2.glb");
     const d6Disadvantage = useGLTF("/models/D6DisadvantageEmbossedRipple.glb");
     const d20Gilded = useGLTF("/models/D20Gilded.glb");
+    const d6Plain = useGLTF("/D6.glb");
 
     const model =
       type == "D20"
@@ -63,7 +65,7 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
         ? d6Disadvantage.nodes.D6DisadvantageEmbossedRipple
         : gilded
         ? d6Gilded.nodes.D6GildedRough
-        : d6Plain.nodes.D6PlainEmbossed;
+        : d6Plain.nodes.D6;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const geometry = (model as any)[
@@ -77,10 +79,10 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
         ? d6Disadvantage.materials.DisadvantageEmbossedRippleMaterial
         : gilded
         ? d6Gilded.materials.GildedRoughMaterial
-        : d6Plain.materials.PlainEmbossedMaterial;
+        : d6Plain.materials.D6;
 
     return (
-      <group ref={ref}>
+      <group ref={ref} dispose={null}>
         <mesh
           quaternion={meshQuaternion}
           scale={[size, size, size]}
