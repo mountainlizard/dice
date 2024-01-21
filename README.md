@@ -36,20 +36,11 @@ Engraved text is produced from a height map. Take the mono (black text on white 
 
 ![Bloom settings](bloom-settings.png)
 
-To use models, first export from blender (settings should be saved - make sure to select the die you want and check "export selected" is enabled). This exports to the `blender` dir, files here are in `.gitignore`. Leave the export name as `dice.glb`. Now convert with `gltfjsx`:
+To use models, first export from blender (settings should be saved - make sure to select the die you want and check "export selected" is enabled). This exports to the `blender` dir, files here are in `.gitignore`. Leave the export name as `dice.glb`. Now install `gltf-transform` with `npm install --global @gltf-transform/cli`, then use to optimise textures:
 
 ```bash
 cd blender
-npx gltfjsx dice.glb --transform --types
+gltf-transform webp dice.glb ../public/D6.glb
 ```
 
-This should produce two files, `Dice.tsx` and `dice-transformed.glb`. You now need to do some renaming and moving - here we are working on the `D6` model, replace this with the actual dice name.
-
-The `Dice.tsx` file will have types for the `GLTFResult` loaded from the `glb` file, however to use the model as a die we need to set scale, rotation, shadows etc. Therefore the easiest approach is to just copy an existing die's component, e.g. from `/lib/models/D6.tsx`, and then search and replace `D6` with the actual die name. This should update the component name, the names of the mesh and materials node, the props name, and the `.glb` resource name. If the die uses different/additional meshes/materials, then you may need to use the types from the generated `Dice.tsx` file to update the contents, or just start from that and introduce the forward ref, `scale` and `meshQuaternion` props.
-
-Now move the transformed GLB to the public folder with the correct dice name, and delete the original glb:
-
-```bash
-mv dice-transformed.glb ../public/D6.glb
-rm dice.glb
-```
+To use the model as a component, copy an existing die's component, e.g. from `/lib/models/D6.tsx`, and then search and replace `D6` with the actual die name. This should update the component name, the names of the mesh and materials node, the props name, and the `.glb` resource name. If the die uses different/additional meshes/materials, then you may need to update the types etc. Have a look at the `gltfjsx` project for examples - run with `--types` to generate a `.tsx` file you can use as a base. Note that you can also transform the `glb` files with `gltfjsx`, however in practice this sometimes seems to break the model's shading.
