@@ -51,43 +51,62 @@ interface DieProps {
 useGLTF.preload("/D6.glb");
 useGLTF.preload("/D6Gilded.glb");
 useGLTF.preload("/D6Disadvantage.glb");
+useGLTF.preload("/D20.glb");
 useGLTF.preload("/D20Gilded.glb");
+useGLTF.preload("/D20Disadvantage.glb");
 // useGLTF.preload("/D20Untransformed.glb");
 
 const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
   ({ type, size, gilded, disadvantage, meshQuaternion }, ref) => {
-    // const d6Plain = useGLTF("/models/D6PlainEmbossed.glb");
-    // const d6Gilded = useGLTF("/models/D6GildedEmbossedFine2.glb");
-    const d6Gilded = useGLTF("/D6Gilded.glb");
-    // const d6Disadvantage = useGLTF("/models/D6DisadvantageEmbossedRipple.glb");
-    // const d20Gilded = useGLTF("/models/D20Gilded.glb");
+    const d20Plain = useGLTF("/D20.glb");
     const d20Gilded = useGLTF("/D20Gilded.glb");
-    // const d20Gilded = useGLTF("/D20Untransformed.glb");
+    const d20Disadvantage = useGLTF("/D20Disadvantage.glb");
     const d6Plain = useGLTF("/D6.glb");
+    const d6Gilded = useGLTF("/D6Gilded.glb");
     const d6Disadvantage = useGLTF("/D6Disadvantage.glb");
 
-    const model =
-      type == "D20"
-        ? d20Gilded.nodes.D20Gilded
-        : disadvantage
-        ? d6Disadvantage.nodes.D6Disadvantage
-        : gilded
-        ? d6Gilded.nodes.D6Gilded
-        : d6Plain.nodes.D6;
+    let model = d6Plain.nodes.D6;
+    if (type == "D6") {
+      if (disadvantage) {
+        model = d6Disadvantage.nodes.D6Disadvantage;
+      } else if (gilded) {
+        model = d6Gilded.nodes.D6Gilded;
+      } else {
+        model = d6Plain.nodes.D6;
+      }
+    } else if (type == "D20") {
+      if (disadvantage) {
+        model = d20Disadvantage.nodes.D20Disadvantage;
+      } else if (gilded) {
+        model = d20Gilded.nodes.D20Gilded;
+      } else {
+        model = d20Plain.nodes.D20;
+      }
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const geometry = (model as any)[
       "geometry"
     ] as BufferGeometry<NormalBufferAttributes>;
 
-    const material =
-      type == "D20"
-        ? d20Gilded.materials.D20Gilded
-        : disadvantage
-        ? d6Disadvantage.materials.D6Disadvantage
-        : gilded
-        ? d6Gilded.materials.D6Gilded
-        : d6Plain.materials.D6;
+    let material = d6Plain.materials.D6;
+    if (type == "D6") {
+      if (disadvantage) {
+        material = d6Disadvantage.materials.D6Disadvantage;
+      } else if (gilded) {
+        material = d6Gilded.materials.D6Gilded;
+      } else {
+        material = d6Plain.materials.D6;
+      }
+    } else if (type == "D20") {
+      if (disadvantage) {
+        material = d20Disadvantage.materials.D20Disadvantage;
+      } else if (gilded) {
+        material = d20Gilded.materials.D20Gilded;
+      } else {
+        material = d20Plain.materials.D20;
+      }
+    }
 
     return (
       <group ref={ref} dispose={null}>
