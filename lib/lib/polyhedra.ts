@@ -23,6 +23,7 @@ import { Quaternion, Vector3 } from "three";
 //  7. Paste the values in here, and edit as necessary. Note that vertices may
 //     be repeated per face, duplicates were deleted for the "collisionMeshVertices"
 //     data, where we only need each vertex as a single vector.
+//  8. Repeat for verex indices using the bufferView with type "SCALAR"
 //
 // The icosahedron is as created in blender using default settings, then
 // scaled by a factor of 1.6. This makes it line up well with a cube
@@ -101,6 +102,31 @@ export const rawIcosahedronVertices = new Float32Array([
   0.00000, 1.60000, 0.00000
 ]);
 
+/**
+ * Produce a Float32Array with the vertex positions of
+ * a d10 collision mesh with specified size.
+ * This can be used to produce a collision mesh for a D10.
+ * @param size The size (scale factor) of the D10
+ * @returns A Float32Array of vertex positions for the D10
+ */
+export const d10CollisionMeshVertices = (size: number): Float32Array => {
+  // prettier-ignore
+  return new Float32Array([
+    0.00000, -1.60000, -0.00000,
+    0.00000, 1.60000, 0.00000,
+    0.94632, 0.16892, 1.30249,
+    1.53117, -0.16892, 0.49751,
+    0.00000, -0.16892, 1.60997,
+    0.94632, -0.16892, -1.30249,
+    1.53117, 0.16892, -0.49751,
+    -0.94632, -0.16892, -1.30249,
+    0.00000, 0.16892, -1.60997,
+    -1.53117, 0.16892, -0.49751,
+    -1.53117, -0.16892, 0.49751,
+    -0.94632, 0.16892, 1.30249,
+  ]).map((a) => a * size);
+};
+
 export type FaceGeometryInfo = {
   center: Vector3;
   corner: Vector3;
@@ -142,6 +168,61 @@ export const icosahedronFaceInfo = faceInfoFromRawGeometry(
   rawIcosahedronVertexIndices
 );
 
+// d10 face info - exported by odd process, we produced 0-size triangular faces at the
+// centers of the d10 faces by bevelling the d10 to produce its dual, then deleting all
+// but the 0-size faces aligned with the centers, and exporting those as glb so we could
+// pull out a vertex from each one. We needed to export 0-sized faces because just single
+// verts won't export in glb. Then we copied them here, and added in the corners by
+// hand since they are always either the top or bottom vertex of the mesh (at +/- 1.6 in y).
+// The wrinkle is that we also did manipulate the 0-sized faces in blender before exporting, to
+// place them by hand so they are positioned so that the line from the origin to each "center"
+// is perpendicular to the face - so the "centers" in this case are not the centroid of the face,
+// but are higher up so they are perpendicular to the face, which is what we need to detect which
+// face is pointing up. By doing this using the scale dual, we made sure that the centers are
+// in a consistent place on each face so that rotating the mesh using them will still work well.
+export const d10FaceInfo: FaceGeometryInfo[] = [
+  {
+    center: new Vector3(0.47211, -0.7155, 0.6498),
+    corner: new Vector3(0.0, -1.6, 0.0),
+  },
+  {
+    center: new Vector3(-0.47211, -0.7155, 0.6498),
+    corner: new Vector3(0.0, -1.6, 0.0),
+  },
+  {
+    center: new Vector3(-0.76389, -0.7155, -0.2482),
+    corner: new Vector3(0.0, -1.6, 0.0),
+  },
+  {
+    center: new Vector3(-0.0, -0.7155, -0.8032),
+    corner: new Vector3(0.0, -1.6, 0.0),
+  },
+  {
+    center: new Vector3(0.76389, -0.7155, -0.2482),
+    corner: new Vector3(0.0, -1.6, 0.0),
+  },
+  {
+    center: new Vector3(-0.76389, 0.7155, 0.2482),
+    corner: new Vector3(0.0, 1.6, 0.0),
+  },
+  {
+    center: new Vector3(-0.0, 0.7155, 0.8032),
+    corner: new Vector3(0.0, 1.6, 0.0),
+  },
+  {
+    center: new Vector3(0.76389, 0.7155, 0.2482),
+    corner: new Vector3(0.0, 1.6, 0.0),
+  },
+  {
+    center: new Vector3(0.47211, 0.7155, -0.6498),
+    corner: new Vector3(0.0, 1.6, 0.0),
+  },
+  {
+    center: new Vector3(-0.47211, 0.7155, -0.6498),
+    corner: new Vector3(0.0, 1.6, 0.0),
+  },
+];
+
 /**
  * Produce a Float32Array with the vertex positions of
  * an icosahedral mesh with specified size (relative to the
@@ -178,7 +259,7 @@ export type DiceInfo = {
 };
 
 // export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
-export type DiceType = "D6" | "D20";
+export type DiceType = "D6" | "D10" | "D20";
 
 export const d20DiceInfo: DiceInfo = {
   type: "D20",
@@ -207,11 +288,20 @@ export const d6DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.cuboid(size, size, size),
 };
 
+export const d10DiceInfo: DiceInfo = {
+  type: "D10",
+  faceValues: range(10).map((value) => value),
+  faceInfo: d10FaceInfo,
+  colliderDescFromSize: (size: number) =>
+    RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
+};
+
 export type DiceSetInfo = Record<DiceType, DiceInfo>;
 
 export const diceSetInfo: DiceSetInfo = {
   D6: d6DiceInfo,
   D20: d20DiceInfo,
+  D10: d10DiceInfo,
 };
 
 export const rotationToFaceUpIndex = (
