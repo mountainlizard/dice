@@ -290,7 +290,7 @@ export const d6DiceInfo: DiceInfo = {
 
 export const d10DiceInfo: DiceInfo = {
   type: "D10",
-  faceValues: range(10).map((value) => value),
+  faceValues: [6, 2, 8, 0, 4, 5, 9, 1, 7, 3],
   faceInfo: d10FaceInfo,
   colliderDescFromSize: (size: number) =>
     RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,

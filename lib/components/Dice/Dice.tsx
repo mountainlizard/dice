@@ -232,8 +232,8 @@ const DicePlayback = ({
         // If we have a valid desired roll for this die,
         // rotate the mesh inside the group so that the desired face
         // will point upwards at the end of the simulation
-        const desiredRoll = desiredRolls ? desiredRolls[diceIndex] : null;
-        if (desiredRoll) {
+        const desiredRoll = desiredRolls ? desiredRolls[diceIndex] : undefined;
+        if (desiredRoll !== undefined) {
           const desiredFaceIndex = diceInfo.faceValues.findIndex(
             (faceValue) => faceValue == desiredRoll
           );
