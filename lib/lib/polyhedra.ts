@@ -259,7 +259,7 @@ export type DiceInfo = {
 };
 
 // export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
-export type DiceType = "D6" | "D10" | "D20";
+export type DiceType = "D6" | "D10" | "D10x10" | "D20";
 
 export const d20DiceInfo: DiceInfo = {
   type: "D20",
@@ -296,12 +296,21 @@ export const d10DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
 };
 
+export const d10x10DiceInfo: DiceInfo = {
+  type: "D10x10",
+  faceValues: [60, 20, 80, 0, 40, 50, 90, 10, 70, 30],
+  faceInfo: d10FaceInfo,
+  colliderDescFromSize: (size: number) =>
+    RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
+};
+
 export type DiceSetInfo = Record<DiceType, DiceInfo>;
 
 export const diceSetInfo: DiceSetInfo = {
   D6: d6DiceInfo,
   D20: d20DiceInfo,
   D10: d10DiceInfo,
+  D10x10: d10x10DiceInfo,
 };
 
 export const rotationToFaceUpIndex = (

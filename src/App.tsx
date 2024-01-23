@@ -13,13 +13,13 @@ function App() {
           <Dice
             size={0.1}
             // diceTypes={["D20", "D6", "D10", "D6", "D6", "D6"]}
-            diceTypes={["D10"]}
+            diceTypes={["D10x10", "D10"]}
             // diceTypes={range(20).map(() => "D20")}
             gildedCount={0}
             seed={seed}
             disadvantage={true}
             // desiredRolls={[20, 10, 4, 6, 6, 6]}
-            desiredRolls={[9]}
+            desiredRolls={[40, 2]}
             // desiredRolls={range(20).map((i) => i + 1)}
             // desiredRolls={range(20).map(() => 20)}
           />
