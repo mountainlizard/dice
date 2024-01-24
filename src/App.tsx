@@ -17,7 +17,7 @@ function App() {
             // diceTypes={range(20).map(() => "D20")}
             gildedCount={0}
             seed={seed}
-            disadvantage={true}
+            disadvantage={false}
             // desiredRolls={[20, 10, 4, 6, 6, 6]}
             desiredRolls={[40, 2]}
             // desiredRolls={range(20).map((i) => i + 1)}
@@ -32,5 +32,3 @@ function App() {
 }
 
 export default App;
-// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-// 6, 2, 8, 0, 4, 5, 9, 1, 7, 3
