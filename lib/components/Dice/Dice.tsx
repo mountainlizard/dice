@@ -20,6 +20,15 @@ import { DiceType, diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
 const env = import("@pmndrs/assets/hdri/forest.exr").then(
   (module) => module.default
 );
+// const env = import("@pmndrs/assets/hdri/sunset.exr").then(
+//   (module) => module.default
+// );
+// const env = import("@pmndrs/assets/hdri/city.exr").then(
+//   (module) => module.default
+// );
+// const env = import("@pmndrs/assets/hdri/apartment.exr").then(
+//   (module) => module.default
+// );
 
 const defaultShadowColor = "#2e262e";
 
