@@ -53,6 +53,9 @@ interface DieProps {
   meshQuaternion: Quaternion;
 }
 
+useGLTF.preload("/D4.glb");
+useGLTF.preload("/D4Gilded.glb");
+useGLTF.preload("/D4Disadvantage.glb");
 useGLTF.preload("/D6.glb");
 useGLTF.preload("/D6Gilded.glb");
 useGLTF.preload("/D6Disadvantage.glb");
@@ -74,6 +77,9 @@ useGLTF.preload("/D20Disadvantage.glb");
 
 const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
   ({ type, size, gilded, disadvantage, meshQuaternion }, ref) => {
+    const d4Plain = useGLTF("/D4.glb");
+    const d4Gilded = useGLTF("/D4Gilded.glb");
+    const d4Disadvantage = useGLTF("/D4Disadvantage.glb");
     const d6Plain = useGLTF("/D6.glb");
     const d6Gilded = useGLTF("/D6Gilded.glb");
     const d6Disadvantage = useGLTF("/D6Disadvantage.glb");
@@ -94,7 +100,15 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
     const d20Disadvantage = useGLTF("/D20Disadvantage.glb");
 
     let model = d6Plain.nodes.D6;
-    if (type == "D6") {
+    if (type == "D4") {
+      if (disadvantage) {
+        model = d4Disadvantage.nodes.D4Disadvantage;
+      } else if (gilded) {
+        model = d4Gilded.nodes.D4Gilded;
+      } else {
+        model = d4Plain.nodes.D4;
+      }
+    } else if (type == "D6") {
       if (disadvantage) {
         model = d6Disadvantage.nodes.D6Disadvantage;
       } else if (gilded) {
@@ -150,7 +164,15 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
     ] as BufferGeometry<NormalBufferAttributes>;
 
     let material = d6Plain.materials.D6;
-    if (type == "D6") {
+    if (type == "D4") {
+      if (disadvantage) {
+        material = d4Disadvantage.materials.D4Disadvantage;
+      } else if (gilded) {
+        material = d4Gilded.materials.D4Gilded;
+      } else {
+        material = d4Plain.materials.D4;
+      }
+    } else if (type == "D6") {
       if (disadvantage) {
         material = d6Disadvantage.materials.D6Disadvantage;
       } else if (gilded) {

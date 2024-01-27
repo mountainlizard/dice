@@ -368,6 +368,47 @@ export const d8CollisionMeshVertices = (size: number): Float32Array => {
   ]).map((a) => a * size);
 };
 
+/**
+ * Produce a Float32Array with the vertex positions of
+ * a d4 mesh with specified size (relative to the
+ * size of the D4 appearance meshes). This can be used to produce
+ * a collision mesh for a D4.
+ * @param size The size (scale factor) of the D4
+ * @returns A Float32Array of vertex positions for the D4
+ */
+export const d4CollisionMeshVertices = (size: number): Float32Array => {
+  // prettier-ignore
+  return new Float32Array([
+    0.00000, -0.72508, -2.05084,
+    1.77608, -0.72508, 1.02542,
+    -1.77608, -0.72508, 1.02542,
+    0.00000, 2.17524, 0.00000,
+  ]).map((a) => a * size);
+};
+
+export const d4FaceInfo: FaceGeometryInfo[] = [
+  //down = 1
+  {
+    center: new Vector3(0.0, 0.24169, 0.68361),
+    corner: new Vector3(0.0, 2.17524, 0.0),
+  },
+  // down = 2
+  {
+    center: new Vector3(0.59203, 0.24169, -0.34181),
+    corner: new Vector3(0.0, 2.17524, 0.0),
+  },
+  // down = 3
+  {
+    center: new Vector3(-0.59203, 0.24169, -0.34181),
+    corner: new Vector3(0.0, 2.17524, 0.0),
+  },
+  // down = 4
+  {
+    center: new Vector3(0.0, -0.72508, 0.0),
+    corner: new Vector3(0.0, -0.72508, -2.05084),
+  },
+];
+
 export const d8FaceInfo: FaceGeometryInfo[] = [
   {
     center: new Vector3(0.533333, 0.533333, 0.533333),
@@ -409,10 +450,10 @@ export type DiceInfo = {
   faceValues: number[];
   faceInfo: FaceGeometryInfo[];
   colliderDescFromSize: (size: number) => RAPIER.ColliderDesc;
+  faceDownValue?: boolean;
 };
 
-// export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
-export type DiceType = "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
+export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
 
 export const d20DiceInfo: DiceInfo = {
   type: "D20",
@@ -432,6 +473,15 @@ export const cubeFaceInfo: FaceGeometryInfo[] = [
   { center: new Vector3(0, 1, 0), corner: new Vector3(1, 1, 1) },
   { center: new Vector3(0, 0, -1), corner: new Vector3(1, 1, -1) },
 ];
+
+export const d4DiceInfo: DiceInfo = {
+  type: "D4",
+  faceValues: range(4).map((value) => value + 1),
+  faceInfo: d4FaceInfo,
+  colliderDescFromSize: (size: number) =>
+    RAPIER.ColliderDesc.convexMesh(d4CollisionMeshVertices(size))!,
+  faceDownValue: true,
+};
 
 export const d6DiceInfo: DiceInfo = {
   type: "D6",
@@ -476,6 +526,7 @@ export const d12DiceInfo: DiceInfo = {
 export type DiceSetInfo = Record<DiceType, DiceInfo>;
 
 export const diceSetInfo: DiceSetInfo = {
+  D4: d4DiceInfo,
   D6: d6DiceInfo,
   D8: d8DiceInfo,
   D10: d10DiceInfo,
@@ -498,8 +549,10 @@ export const rotationToFaceUpIndex = (
     const faceCenterVector = diceInfo.faceInfo[faceIndex].center;
     faceVector.copy(faceCenterVector);
     faceVector.applyQuaternion(quaternion);
-    if (faceVector.y > maxY) {
-      maxY = faceVector.y;
+    // "face down" dice are read by which face is facing downwards, so reverse the y
+    const faceY = faceVector.y * (diceInfo.faceDownValue ? -1 : 1);
+    if (faceY > maxY) {
+      maxY = faceY;
       faceUpIndex = faceIndex;
     }
   }
