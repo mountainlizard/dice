@@ -44,3 +44,12 @@ gltf-transform webp dice.glb ../public/D6.glb
 ```
 
 To use the model as a component, copy an existing die's component, e.g. from `/lib/models/D6.tsx`, and then search and replace `D6` with the actual die name. This should update the component name, the names of the mesh and materials node, the props name, and the `.glb` resource name. If the die uses different/additional meshes/materials, then you may need to update the types etc. Have a look at the `gltfjsx` project for examples - run with `--types` to generate a `.tsx` file you can use as a base. Note that you can also transform the `glb` files with `gltfjsx`, however in practice this sometimes seems to break the model's shading.
+
+## Coordinsanity
+
+Every piece of 3D software has to use a different coordinate system, according to ancient custom. When converting from Blender coordinates to Three.js, the mapping is as follows, tested by exporting a vertex at (1, 2, 3) to GLB then inspecting data:
+
+- Blender:  `(x: 1, y: 2, z: 3)`
+- Three.js: `(x: 1, y: 3, z: -2)`
+
+Hence to convert from Blender to Three.js, we swap the y and z values, then make the z value negative. This is handy when e.g. trying to get face corner vertex coordinates, where it's easier to select them in blender and read off coordinates than to try to work out which vertex in an exported `.glb` file is which.
