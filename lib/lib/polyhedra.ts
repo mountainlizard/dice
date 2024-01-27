@@ -135,6 +135,70 @@ export const d12CollisionMeshVertices = (size: number): Float32Array => {
   ]).map((a) => a * size);
 };
 
+// prettier-ignore
+export const d12FaceInfo: FaceGeometryInfo[] = [
+  //1
+  {
+    center: new Vector3(0.00000, -1.17067, -0.00000),
+    corner: new Vector3(0.89431, -1.17067, -0.00000),
+  },
+  //2
+  {
+    center: new Vector3(-0.32356, -0.52354, -0.99582),
+    corner: new Vector3(-0.44715, 0.27636, -1.37619),
+  },
+  //3
+  {
+    center: new Vector3(-0.84710, 0.52354, 0.61545),
+    corner: new Vector3(-1.17066, -0.27636, 0.85053),
+  },
+  //4
+  {
+    center: new Vector3(-1.04707, -0.52354, -0.00000),
+    corner: new Vector3(-1.44702, 0.27637, -0.00000),
+  },
+  //5
+  {
+    center: new Vector3(0.84710, -0.52354, 0.61545),
+    corner: new Vector3(1.17066, 0.27636, 0.85053),
+  },
+  //6
+  {
+    center: new Vector3(-0.32356, -0.52354, 0.99582),
+    corner: new Vector3(-0.44715, 0.27636, 1.37619),
+  },
+  //7
+  {
+    center: new Vector3(0.32356, 0.52354, -0.99582),
+    corner: new Vector3(0.44715, -0.27636, -1.37619),
+  },
+  //8
+  {
+    center: new Vector3(-0.84710, 0.52354, -0.61545),
+    corner: new Vector3(-1.17066, -0.27636, -0.85053),
+  },
+  //9
+  {
+    center: new Vector3(1.04707, 0.52354, -0.00000),
+    corner: new Vector3(1.44702, -0.27637, -0.00000),
+  },
+  //10
+  {
+    center: new Vector3(0.84710, -0.52354, -0.61545),
+    corner: new Vector3(1.44702, -0.27637, -0.00000),
+  },
+  //11
+  {
+    center: new Vector3(0.32356, 0.52354, 0.99582),
+    corner: new Vector3(0.44715, -0.27636, 1.37619),
+  },
+  //12
+  {
+    center: new Vector3(-0.00000, 1.17067, -0.00000),
+    corner: new Vector3(-0.89431, 1.17067, -0.00000),
+  },
+];
+
 /**
  * Produce a Float32Array with the vertex positions of
  * a d10 collision mesh with specified size.
@@ -200,34 +264,6 @@ export const icosahedronFaceInfo = faceInfoFromRawGeometry(
   rawIcosahedronVertices,
   rawIcosahedronVertexIndices
 );
-
-// prettier-ignore
-export const D12FaceCenters = [
-  //1
-  0.00000, -1.17067, -0.00000,
-  //2
-  -0.32356, -0.52354, -0.99582,
-  //3
-  -0.84710, 0.52354, 0.61545,
-  //4
-  -1.04707, -0.52354, -0.00000,
-  //5
-  0.84710, -0.52354, 0.61545,
-  //6
-  -0.32356, -0.52354, 0.99582,
-  //7
-  0.32356, 0.52354, -0.99582,
-  //8
-  -0.84710, 0.52354, -0.61545,
-  //9
-  1.04707, 0.52354, -0.00000,
-  //10
-  0.84710, -0.52354, -0.61545,
-  //11
-  0.32356, 0.52354, 0.99582,
-  //12
-  -0.00000, 1.17067, -0.00000,
-];
 
 // d10 face info - exported by odd process, we produced 0-size triangular faces at the
 // centers of the d10 faces by bevelling the d10 to produce its dual, then deleting all
@@ -320,7 +356,7 @@ export type DiceInfo = {
 };
 
 // export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
-export type DiceType = "D6" | "D10" | "D10x10" | "D20";
+export type DiceType = "D6" | "D10" | "D10x10" | "D12" | "D20";
 
 export const d20DiceInfo: DiceInfo = {
   type: "D20",
@@ -365,6 +401,14 @@ export const d10x10DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
 };
 
+export const d12DiceInfo: DiceInfo = {
+  type: "D12",
+  faceValues: range(12).map((value) => value + 1),
+  faceInfo: d12FaceInfo,
+  colliderDescFromSize: (size: number) =>
+    RAPIER.ColliderDesc.convexMesh(d12CollisionMeshVertices(size))!,
+};
+
 export type DiceSetInfo = Record<DiceType, DiceInfo>;
 
 export const diceSetInfo: DiceSetInfo = {
@@ -372,6 +416,7 @@ export const diceSetInfo: DiceSetInfo = {
   D20: d20DiceInfo,
   D10: d10DiceInfo,
   D10x10: d10x10DiceInfo,
+  D12: d12DiceInfo,
 };
 
 export const rotationToFaceUpIndex = (
