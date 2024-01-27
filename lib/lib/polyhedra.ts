@@ -104,6 +104,31 @@ export const rawIcosahedronVertices = new Float32Array([
 
 /**
  * Produce a Float32Array with the vertex positions of
+ * a d12 collision mesh with specified size.
+ * This can be used to produce a collision mesh for a D12.
+ * @param size The size (scale factor) of the D12
+ * @returns A Float32Array of vertex positions for the D12
+ */
+export const d12CollisionMeshVertices = (size: number): Float32Array => {
+  // prettier-ignore
+  return new Float32Array([
+    -0.30985, -0.50135, 0.95361,
+    0.00000, -1.12106, -0.00000,
+    0.81120, -0.50135, 0.58936,
+    1.00269, 0.50135, -0.00000,
+    0.30985, 0.50135, 0.95361,
+    -0.81120, 0.50135, 0.58936,
+    -1.00269, -0.50135, -0.00000,
+    -0.30985, -0.50135, -0.95361,
+    0.81120, -0.50135, -0.58937,
+    0.30985, 0.50135, -0.95361,    
+    -0.00000, 1.12106, -0.00000,
+    -0.81120, 0.50135, -0.58937,
+  ]).map((a) => a * size);
+};
+
+/**
+ * Produce a Float32Array with the vertex positions of
  * a d10 collision mesh with specified size.
  * This can be used to produce a collision mesh for a D10.
  * @param size The size (scale factor) of the D10
@@ -112,18 +137,6 @@ export const rawIcosahedronVertices = new Float32Array([
 export const d10CollisionMeshVertices = (size: number): Float32Array => {
   // prettier-ignore
   return new Float32Array([
-    0.00000, -1.60000, -0.00000,
-    0.00000, 1.60000, 0.00000,
-    0.94632, 0.16892, 1.30249,
-    1.53117, -0.16892, 0.49751,
-    0.00000, -0.16892, 1.60997,
-    0.94632, -0.16892, -1.30249,
-    1.53117, 0.16892, -0.49751,
-    -0.94632, -0.16892, -1.30249,
-    0.00000, 0.16892, -1.60997,
-    -1.53117, 0.16892, -0.49751,
-    -1.53117, -0.16892, 0.49751,
-    -0.94632, 0.16892, 1.30249,
   ]).map((a) => a * size);
 };
 
@@ -167,6 +180,22 @@ export const icosahedronFaceInfo = faceInfoFromRawGeometry(
   rawIcosahedronVertices,
   rawIcosahedronVertexIndices
 );
+
+// prettier-ignore
+export const D12FaceCenters = [
+  -0.32356, -0.52354, 0.99582,
+  0.00000, -1.17067, -0.00000,
+  0.84710, -0.52354, 0.61545,
+  1.04707, 0.52354, -0.00000,
+  0.32356, 0.52354, 0.99582,
+  -0.84710, 0.52354, 0.61545,
+  -1.04707, -0.52354, -0.00000,
+  -0.32356, -0.52354, -0.99582,
+  0.84710, -0.52354, -0.61545,
+  0.32356, 0.52354, -0.99582,
+  -0.00000, 1.17067, -0.00000,
+  -0.84710, 0.52354, -0.61545,
+];
 
 // d10 face info - exported by odd process, we produced 0-size triangular faces at the
 // centers of the d10 faces by bevelling the d10 to produce its dual, then deleting all
