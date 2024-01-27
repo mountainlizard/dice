@@ -348,6 +348,62 @@ export const icosahedronCollisionMeshVertices = (
   ]).map((a) => a * size);
 };
 
+/**
+ * Produce a Float32Array with the vertex positions of
+ * a d8 mesh with specified size (relative to the
+ * size of the D8 appearance meshes). This can be used to produce
+ * a collision mesh for a D8.
+ * @param size The size (scale factor) of the D8
+ * @returns A Float32Array of vertex positions for the D8
+ */
+export const d8CollisionMeshVertices = (size: number): Float32Array => {
+  // prettier-ignore
+  return new Float32Array([
+    0.00000, -1.60000, 0.00000,
+    0.00000, 1.60000, 0.00000,
+    -1.60000, 0.00000, 0.00000,
+    1.60000, 0.00000, 0.00000,
+    0.00000, 0.00000, -1.60000,
+    0.00000, 0.00000, 1.60000,
+  ]).map((a) => a * size);
+};
+
+export const d8FaceInfo: FaceGeometryInfo[] = [
+  {
+    center: new Vector3(0.533333, 0.533333, 0.533333),
+    corner: new Vector3(0, 1.6, 0),
+  },
+  {
+    center: new Vector3(-0.533333, 0.533333, 0.533333),
+    corner: new Vector3(0, 1.6, 0),
+  },
+  {
+    center: new Vector3(0.533333, 0.533333, -0.533333),
+    corner: new Vector3(0, 1.6, 0),
+  },
+  {
+    center: new Vector3(-0.533333, 0.533333, -0.533333),
+    corner: new Vector3(0, 1.6, 0),
+  },
+
+  {
+    center: new Vector3(0.533333, -0.533333, 0.533333),
+    corner: new Vector3(0, -1.6, 0),
+  },
+  {
+    center: new Vector3(-0.533333, -0.533333, 0.533333),
+    corner: new Vector3(0, -1.6, 0),
+  },
+  {
+    center: new Vector3(0.533333, -0.533333, -0.533333),
+    corner: new Vector3(0, -1.6, 0),
+  },
+  {
+    center: new Vector3(-0.533333, -0.533333, -0.533333),
+    corner: new Vector3(0, -1.6, 0),
+  },
+];
+
 export type DiceInfo = {
   type: DiceType;
   faceValues: number[];
@@ -356,7 +412,7 @@ export type DiceInfo = {
 };
 
 // export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
-export type DiceType = "D6" | "D10" | "D10x10" | "D12" | "D20";
+export type DiceType = "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
 
 export const d20DiceInfo: DiceInfo = {
   type: "D20",
@@ -383,6 +439,14 @@ export const d6DiceInfo: DiceInfo = {
   faceInfo: cubeFaceInfo,
   colliderDescFromSize: (size: number) =>
     RAPIER.ColliderDesc.cuboid(size, size, size),
+};
+
+export const d8DiceInfo: DiceInfo = {
+  type: "D8",
+  faceValues: [1, 4, 6, 7, 2, 3, 5, 8],
+  faceInfo: d8FaceInfo,
+  colliderDescFromSize: (size: number) =>
+    RAPIER.ColliderDesc.convexMesh(d8CollisionMeshVertices(size))!,
 };
 
 export const d10DiceInfo: DiceInfo = {
@@ -413,10 +477,11 @@ export type DiceSetInfo = Record<DiceType, DiceInfo>;
 
 export const diceSetInfo: DiceSetInfo = {
   D6: d6DiceInfo,
-  D20: d20DiceInfo,
+  D8: d8DiceInfo,
   D10: d10DiceInfo,
   D10x10: d10x10DiceInfo,
   D12: d12DiceInfo,
+  D20: d20DiceInfo,
 };
 
 export const rotationToFaceUpIndex = (

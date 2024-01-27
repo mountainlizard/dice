@@ -56,9 +56,9 @@ interface DieProps {
 useGLTF.preload("/D6.glb");
 useGLTF.preload("/D6Gilded.glb");
 useGLTF.preload("/D6Disadvantage.glb");
-useGLTF.preload("/D20.glb");
-useGLTF.preload("/D20Gilded.glb");
-useGLTF.preload("/D20Disadvantage.glb");
+useGLTF.preload("/D8.glb");
+useGLTF.preload("/D8Gilded.glb");
+useGLTF.preload("/D8Disadvantage.glb");
 useGLTF.preload("/D10.glb");
 useGLTF.preload("/D10Gilded.glb");
 useGLTF.preload("/D10Disadvantage.glb");
@@ -68,15 +68,18 @@ useGLTF.preload("/D10x10Disadvantage.glb");
 useGLTF.preload("/D12.glb");
 useGLTF.preload("/D12Gilded.glb");
 useGLTF.preload("/D12Disadvantage.glb");
+useGLTF.preload("/D20.glb");
+useGLTF.preload("/D20Gilded.glb");
+useGLTF.preload("/D20Disadvantage.glb");
 
 const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
   ({ type, size, gilded, disadvantage, meshQuaternion }, ref) => {
-    const d20Plain = useGLTF("/D20.glb");
-    const d20Gilded = useGLTF("/D20Gilded.glb");
-    const d20Disadvantage = useGLTF("/D20Disadvantage.glb");
     const d6Plain = useGLTF("/D6.glb");
     const d6Gilded = useGLTF("/D6Gilded.glb");
     const d6Disadvantage = useGLTF("/D6Disadvantage.glb");
+    const d8Plain = useGLTF("/D8.glb");
+    const d8Gilded = useGLTF("/D8Gilded.glb");
+    const d8Disadvantage = useGLTF("/D8Disadvantage.glb");
     const d10 = useGLTF("/D10.glb");
     const d10Gilded = useGLTF("/D10Gilded.glb");
     const d10Disadvantage = useGLTF("/D10Disadvantage.glb");
@@ -86,6 +89,9 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
     const d12 = useGLTF("/D12.glb");
     const d12Gilded = useGLTF("/D12Gilded.glb");
     const d12Disadvantage = useGLTF("/D12Disadvantage.glb");
+    const d20Plain = useGLTF("/D20.glb");
+    const d20Gilded = useGLTF("/D20Gilded.glb");
+    const d20Disadvantage = useGLTF("/D20Disadvantage.glb");
 
     let model = d6Plain.nodes.D6;
     if (type == "D6") {
@@ -95,6 +101,14 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
         model = d6Gilded.nodes.D6Gilded;
       } else {
         model = d6Plain.nodes.D6;
+      }
+    } else if (type == "D8") {
+      if (disadvantage) {
+        model = d8Disadvantage.nodes.D8Disadvantage;
+      } else if (gilded) {
+        model = d8Gilded.nodes.D8Gilded;
+      } else {
+        model = d8Plain.nodes.D8;
       }
     } else if (type == "D10") {
       if (disadvantage) {
@@ -143,6 +157,14 @@ const Die = forwardRef<Group<Object3DEventMap>, DieProps>(
         material = d6Gilded.materials.D6Gilded;
       } else {
         material = d6Plain.materials.D6;
+      }
+    } else if (type == "D8") {
+      if (disadvantage) {
+        material = d8Disadvantage.materials.D8Disadvantage;
+      } else if (gilded) {
+        material = d8Gilded.materials.D8Gilded;
+      } else {
+        material = d8Plain.materials.D8;
       }
     } else if (type == "D10") {
       if (disadvantage) {
