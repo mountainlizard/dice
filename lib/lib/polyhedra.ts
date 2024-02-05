@@ -405,7 +405,7 @@ export const d4FaceInfo: FaceGeometryInfo[] = [
   // down = 4
   {
     center: new Vector3(0.0, -0.72508, 0.0),
-    corner: new Vector3(0.0, -0.72508, -2.05084),
+    corner: new Vector3(-1.77608, -0.72508, 1.02542),
   },
 ];
 
@@ -696,7 +696,7 @@ export const rotateFaceToFace = (
   const centerRotation = new Quaternion();
   centerRotation.setFromAxisAngle(
     toFaceCenterNorm,
-    angle * Math.sign(direction) * -1
+    angle * (direction >= 0 ? -1 : 1)
   );
 
   // Add the rotation about face center to the initial rotation,
