@@ -26,9 +26,24 @@ function App() {
               "D12",
               "D20",
             ]}
-            gildedCount={7}
+            dieVariants={[
+              "Advantage",
+              "Advantage",
+              "Advantage",
+              "Advantage",
+              "Advantage",
+              "Advantage",
+              "Advantage",
+
+              "Disadvantage",
+              "Disadvantage",
+              "Disadvantage",
+              "Disadvantage",
+              "Disadvantage",
+              "Disadvantage",
+              "Disadvantage",
+            ]}
             seed={seed}
-            disadvantage={false}
             desiredRolls={[1, 2, 3, 4, 50, 6, 7, 4, 6, 8, 9, 90, 12, 20]}
           />
         </Suspense>

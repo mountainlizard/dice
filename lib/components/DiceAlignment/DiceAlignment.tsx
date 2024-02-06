@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { Quaternion, Vector3 } from "three";
 
 import { DiceType, diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
-import { Die } from "../Dice/Die";
+import { Die } from "../Die/Die";
 
 interface FaceVectorsProps {
   type: DiceType;
@@ -43,7 +43,14 @@ const RotatedDie = ({ type, size, faceFrom, faceTo }: RotatedDieProps) => {
   // the Die
   const meshQuaternion = new Quaternion();
   rotateFaceToFace(type, faceFrom, faceTo, meshQuaternion);
-  return <Die type={type} size={size} meshQuaternion={meshQuaternion} />;
+  return (
+    <Die
+      type={type}
+      variant="Normal"
+      size={size}
+      meshQuaternion={meshQuaternion}
+    />
+  );
 };
 
 export const DiceAlignment = () => {

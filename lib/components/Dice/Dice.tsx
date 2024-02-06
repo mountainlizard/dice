@@ -9,7 +9,7 @@ import range from "../../lib/range";
 import { runDiceSimulation, DiceSimulation } from "../../lib/runDiceSimulation";
 import { lerp } from "three/src/math/MathUtils.js";
 import { DiceType, diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
-import { Die } from "./Die";
+import { Die, DieVariant } from "../Die/Die";
 
 // forest, sunset, city and apartment are candidates here
 const env = import("@pmndrs/assets/hdri/forest.exr").then(
@@ -73,8 +73,7 @@ const physicsFrameRate = 60;
 interface DicePlaybackProps {
   sim: DiceSimulation;
   diceTypes: DiceType[];
-  gildedCount: number;
-  disadvantage?: boolean;
+  dieVariants: DieVariant[];
   desiredRolls?: number[];
   startTime: React.MutableRefObject<number | null>;
 }
@@ -82,8 +81,7 @@ interface DicePlaybackProps {
 const DicePlayback = ({
   sim,
   diceTypes,
-  gildedCount,
-  disadvantage,
+  dieVariants,
   desiredRolls,
   startTime,
 }: DicePlaybackProps) => {
@@ -131,6 +129,7 @@ const DicePlayback = ({
         const meshQuaternion = new Quaternion();
 
         const diceType = diceTypes[diceIndex];
+        const dieVariant = dieVariants[diceIndex];
         const diceInfo = diceSetInfo[diceType];
 
         // If we have a valid desired roll for this die,
@@ -156,9 +155,8 @@ const DicePlayback = ({
           <Die
             key={diceIndex}
             type={diceType}
+            variant={dieVariant}
             ref={(el) => (diceGroups.current[diceIndex] = el)}
-            gilded={gildedCount > diceIndex}
-            disadvantage={disadvantage}
             size={sim.size}
             meshQuaternion={meshQuaternion}
           />
@@ -171,8 +169,7 @@ const DicePlayback = ({
 export interface DiceProps {
   size: number;
   diceTypes: DiceType[];
-  gildedCount: number;
-  disadvantage?: boolean;
+  dieVariants: DieVariant[];
   seed: number;
   desiredRolls?: number[];
   shadowColor?: string;
@@ -181,8 +178,7 @@ export interface DiceProps {
 export const Dice = ({
   size,
   diceTypes,
-  gildedCount,
-  disadvantage,
+  dieVariants,
   seed,
   desiredRolls,
   shadowColor,
@@ -233,8 +229,7 @@ export const Dice = ({
         {sim && (
           <DicePlayback
             diceTypes={diceTypes}
-            gildedCount={gildedCount}
-            disadvantage={disadvantage}
+            dieVariants={dieVariants}
             sim={sim}
             desiredRolls={desiredRolls}
             startTime={startTime}
