@@ -11,13 +11,13 @@ const boundaryRestitution = 0.5;
 const tableRestitution = 0.2;
 const diceRestitution = 0.2;
 
-const tableFriction = 0.2; //10
-const diceFriction = 0.04; //1
+const tableFriction = 0.2;
+const diceFriction = 0.04;
 const speedRange = 2;
 const velocityX = 0;
 const velocityZ = 0;
 
-const initialSpacing = 1.2; // 2
+const initialSpacing = 1.2;
 
 const randomQuaternion = (r: Rando): RAPIER.Rotation => {
   // Derived from http://planning.cs.uiuc.edu/node198.html
@@ -149,7 +149,6 @@ const createDiceWorld = (
   addBoundaries(world);
 
   const diceBodies = diceTypes.map((type, i) =>
-    // addDice(world, i, count, size, "D6", r)
     addDice(world, i, diceTypes.length, size, type, r)
   );
 

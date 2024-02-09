@@ -31,7 +31,7 @@ import { Quaternion, Vector3 } from "three";
 // size to yield the mesh.
 
 // Raw GLB vertex indices
-export const rawIcosahedronVertexIndices = [
+const rawIcosahedronVertexIndices = [
   3, 5, 13, 7, 4, 27, 1, 11, 19, 0, 18, 21, 2, 23, 25, 9, 29, 54, 14, 6, 32, 17,
   10, 36, 20, 16, 41, 26, 24, 47, 8, 53, 34, 12, 30, 38, 15, 35, 40, 22, 43, 45,
   28, 49, 52, 33, 51, 59, 39, 31, 57, 42, 37, 55, 46, 44, 56, 50, 48, 58,
@@ -39,7 +39,7 @@ export const rawIcosahedronVertexIndices = [
 
 // Raw GLB vertex positions
 // prettier-ignore
-export const rawIcosahedronVertices = new Float32Array([
+const rawIcosahedronVertices = new Float32Array([
   0.00000, -1.60000, 0.00000,
   0.00000, -1.60000, 0.00000,
   0.00000, -1.60000, 0.00000,
@@ -109,7 +109,7 @@ export const rawIcosahedronVertices = new Float32Array([
  * @param size The size (scale factor) of the D12
  * @returns A Float32Array of vertex positions for the D12
  */
-export const d12CollisionMeshVertices = (size: number): Float32Array => {
+const d12CollisionMeshVertices = (size: number): Float32Array => {
   // prettier-ignore
   return new Float32Array([
     0.27636, -1.17067, 0.85053,
@@ -136,7 +136,7 @@ export const d12CollisionMeshVertices = (size: number): Float32Array => {
 };
 
 // prettier-ignore
-export const d12FaceInfo: FaceGeometryInfo[] = [
+const d12FaceInfo: FaceGeometryInfo[] = [
   //1
   {
     center: new Vector3(0.00000, -1.17067, -0.00000),
@@ -206,7 +206,7 @@ export const d12FaceInfo: FaceGeometryInfo[] = [
  * @param size The size (scale factor) of the D10
  * @returns A Float32Array of vertex positions for the D10
  */
-export const d10CollisionMeshVertices = (size: number): Float32Array => {
+const d10CollisionMeshVertices = (size: number): Float32Array => {
   // prettier-ignore
   return new Float32Array([
     0.00000, -1.60000, -0.00000,
@@ -224,12 +224,7 @@ export const d10CollisionMeshVertices = (size: number): Float32Array => {
   ]).map((a) => a * size);
 };
 
-export type FaceGeometryInfo = {
-  center: Vector3;
-  corner: Vector3;
-};
-
-export const faceInfoFromRawGeometry = (
+const faceInfoFromRawGeometry = (
   vertices: Float32Array,
   vertexIndices: number[]
 ): FaceGeometryInfo[] => {
@@ -260,7 +255,7 @@ export const faceInfoFromRawGeometry = (
   });
 };
 
-export const icosahedronFaceInfo = faceInfoFromRawGeometry(
+const icosahedronFaceInfo = faceInfoFromRawGeometry(
   rawIcosahedronVertices,
   rawIcosahedronVertexIndices
 );
@@ -277,7 +272,7 @@ export const icosahedronFaceInfo = faceInfoFromRawGeometry(
 // but are higher up so they are perpendicular to the face, which is what we need to detect which
 // face is pointing up. By doing this using the scale dual, we made sure that the centers are
 // in a consistent place on each face so that rotating the mesh using them will still work well.
-export const d10FaceInfo: FaceGeometryInfo[] = [
+const d10FaceInfo: FaceGeometryInfo[] = [
   {
     center: new Vector3(0.47211, -0.7155, 0.6498),
     corner: new Vector3(0.0, -1.6, 0.0),
@@ -328,9 +323,7 @@ export const d10FaceInfo: FaceGeometryInfo[] = [
  * @param size The size (scale factor) of the D20
  * @returns A Float32Array of vertex positions for the D20
  */
-export const icosahedronCollisionMeshVertices = (
-  size: number
-): Float32Array => {
+const icosahedronCollisionMeshVertices = (size: number): Float32Array => {
   // prettier-ignore
   return new Float32Array([
     0.00000, -1.60000, 0.00000,
@@ -356,7 +349,7 @@ export const icosahedronCollisionMeshVertices = (
  * @param size The size (scale factor) of the D8
  * @returns A Float32Array of vertex positions for the D8
  */
-export const d8CollisionMeshVertices = (size: number): Float32Array => {
+const d8CollisionMeshVertices = (size: number): Float32Array => {
   // prettier-ignore
   return new Float32Array([
     0.00000, -1.60000, 0.00000,
@@ -376,7 +369,7 @@ export const d8CollisionMeshVertices = (size: number): Float32Array => {
  * @param size The size (scale factor) of the D4
  * @returns A Float32Array of vertex positions for the D4
  */
-export const d4CollisionMeshVertices = (size: number): Float32Array => {
+const d4CollisionMeshVertices = (size: number): Float32Array => {
   // prettier-ignore
   return new Float32Array([
     0.00000, -0.72508, -2.05084,
@@ -386,7 +379,7 @@ export const d4CollisionMeshVertices = (size: number): Float32Array => {
   ]).map((a) => a * size);
 };
 
-export const d4FaceInfo: FaceGeometryInfo[] = [
+const d4FaceInfo: FaceGeometryInfo[] = [
   //down = 1
   {
     center: new Vector3(0.0, 0.24169, 0.68361),
@@ -409,7 +402,7 @@ export const d4FaceInfo: FaceGeometryInfo[] = [
   },
 ];
 
-export const d8FaceInfo: FaceGeometryInfo[] = [
+const d8FaceInfo: FaceGeometryInfo[] = [
   {
     center: new Vector3(0.533333, 0.533333, 0.533333),
     corner: new Vector3(0, 1.6, 0),
@@ -445,17 +438,7 @@ export const d8FaceInfo: FaceGeometryInfo[] = [
   },
 ];
 
-export type DiceInfo = {
-  type: DiceType;
-  faceValues: number[];
-  faceInfo: FaceGeometryInfo[];
-  colliderDescFromSize: (size: number) => RAPIER.ColliderDesc;
-  faceDownValue?: boolean;
-};
-
-export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
-
-export const d20DiceInfo: DiceInfo = {
+const d20DiceInfo: DiceInfo = {
   type: "D20",
   faceValues: [
     17, 3, 7, 1, 19, 16, 10, 15, 13, 9, 8, 12, 5, 11, 6, 20, 2, 18, 4, 14,
@@ -465,7 +448,7 @@ export const d20DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.convexMesh(icosahedronCollisionMeshVertices(size))!,
 };
 
-export const cubeFaceInfo: FaceGeometryInfo[] = [
+const cubeFaceInfo: FaceGeometryInfo[] = [
   { center: new Vector3(0, 0, 1), corner: new Vector3(1, 1, 1) },
   { center: new Vector3(0, -1, 0), corner: new Vector3(1, -1, 1) },
   { center: new Vector3(1, 0, 0), corner: new Vector3(1, 1, 1) },
@@ -474,7 +457,7 @@ export const cubeFaceInfo: FaceGeometryInfo[] = [
   { center: new Vector3(0, 0, -1), corner: new Vector3(1, 1, -1) },
 ];
 
-export const d4DiceInfo: DiceInfo = {
+const d4DiceInfo: DiceInfo = {
   type: "D4",
   faceValues: range(4).map((value) => value + 1),
   faceInfo: d4FaceInfo,
@@ -483,7 +466,7 @@ export const d4DiceInfo: DiceInfo = {
   faceDownValue: true,
 };
 
-export const d6DiceInfo: DiceInfo = {
+const d6DiceInfo: DiceInfo = {
   type: "D6",
   faceValues: range(6).map((value) => value + 1),
   faceInfo: cubeFaceInfo,
@@ -491,7 +474,7 @@ export const d6DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.cuboid(size, size, size),
 };
 
-export const d8DiceInfo: DiceInfo = {
+const d8DiceInfo: DiceInfo = {
   type: "D8",
   faceValues: [1, 4, 6, 7, 2, 3, 5, 8],
   faceInfo: d8FaceInfo,
@@ -499,7 +482,7 @@ export const d8DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.convexMesh(d8CollisionMeshVertices(size))!,
 };
 
-export const d10DiceInfo: DiceInfo = {
+const d10DiceInfo: DiceInfo = {
   type: "D10",
   faceValues: [6, 2, 8, 0, 4, 5, 9, 1, 7, 3],
   faceInfo: d10FaceInfo,
@@ -507,7 +490,7 @@ export const d10DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
 };
 
-export const d10x10DiceInfo: DiceInfo = {
+const d10x10DiceInfo: DiceInfo = {
   type: "D10x10",
   faceValues: [60, 20, 80, 0, 40, 50, 90, 10, 70, 30],
   faceInfo: d10FaceInfo,
@@ -515,49 +498,12 @@ export const d10x10DiceInfo: DiceInfo = {
     RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
 };
 
-export const d12DiceInfo: DiceInfo = {
+const d12DiceInfo: DiceInfo = {
   type: "D12",
   faceValues: range(12).map((value) => value + 1),
   faceInfo: d12FaceInfo,
   colliderDescFromSize: (size: number) =>
     RAPIER.ColliderDesc.convexMesh(d12CollisionMeshVertices(size))!,
-};
-
-export type DiceSetInfo = Record<DiceType, DiceInfo>;
-
-export const diceSetInfo: DiceSetInfo = {
-  D4: d4DiceInfo,
-  D6: d6DiceInfo,
-  D8: d8DiceInfo,
-  D10: d10DiceInfo,
-  D10x10: d10x10DiceInfo,
-  D12: d12DiceInfo,
-  D20: d20DiceInfo,
-};
-
-export const rotationToFaceUpIndex = (
-  diceType: DiceType,
-  quaternion: Quaternion
-) => {
-  const diceInfo = diceSetInfo[diceType];
-
-  let maxY = -10;
-  let faceUpIndex = 0;
-
-  const faceVector = new Vector3();
-  for (let faceIndex = 0; faceIndex < diceInfo.faceInfo.length; faceIndex++) {
-    const faceCenterVector = diceInfo.faceInfo[faceIndex].center;
-    faceVector.copy(faceCenterVector);
-    faceVector.applyQuaternion(quaternion);
-    // "face down" dice are read by which face is facing downwards, so reverse the y
-    const faceY = faceVector.y * (diceInfo.faceDownValue ? -1 : 1);
-    if (faceY > maxY) {
-      maxY = faceY;
-      faceUpIndex = faceIndex;
-    }
-  }
-
-  return faceUpIndex;
 };
 
 /**
@@ -572,11 +518,7 @@ export const rotationToFaceUpIndex = (
  * @param vTo 	To Vector
  * @returns 		The quaternion
  */
-export const setFromUnitVectors = (
-  q: Quaternion,
-  vFrom: Vector3,
-  vTo: Vector3
-) => {
+const setFromUnitVectors = (q: Quaternion, vFrom: Vector3, vTo: Vector3) => {
   // assumes direction vectors vFrom and vTo are normalized
 
   let r = vFrom.dot(vTo) + 1;
@@ -613,6 +555,58 @@ export const setFromUnitVectors = (
   q.set(qx, qy, qz, qw);
 
   return q.normalize();
+};
+
+export type FaceGeometryInfo = {
+  center: Vector3;
+  corner: Vector3;
+};
+
+export type DiceInfo = {
+  type: DiceType;
+  faceValues: number[];
+  faceInfo: FaceGeometryInfo[];
+  colliderDescFromSize: (size: number) => RAPIER.ColliderDesc;
+  faceDownValue?: boolean;
+};
+
+export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
+
+export type DiceSetInfo = Record<DiceType, DiceInfo>;
+
+export const diceSetInfo: DiceSetInfo = {
+  D4: d4DiceInfo,
+  D6: d6DiceInfo,
+  D8: d8DiceInfo,
+  D10: d10DiceInfo,
+  D10x10: d10x10DiceInfo,
+  D12: d12DiceInfo,
+  D20: d20DiceInfo,
+};
+
+export const rotationToFaceUpIndex = (
+  diceType: DiceType,
+  quaternion: Quaternion
+) => {
+  const diceInfo = diceSetInfo[diceType];
+
+  let maxY = -10;
+  let faceUpIndex = 0;
+
+  const faceVector = new Vector3();
+  for (let faceIndex = 0; faceIndex < diceInfo.faceInfo.length; faceIndex++) {
+    const faceCenterVector = diceInfo.faceInfo[faceIndex].center;
+    faceVector.copy(faceCenterVector);
+    faceVector.applyQuaternion(quaternion);
+    // "face down" dice are read by which face is facing downwards, so reverse the y
+    const faceY = faceVector.y * (diceInfo.faceDownValue ? -1 : 1);
+    if (faceY > maxY) {
+      maxY = faceY;
+      faceUpIndex = faceIndex;
+    }
+  }
+
+  return faceUpIndex;
 };
 
 /**

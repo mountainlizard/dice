@@ -1,5 +1,5 @@
 import { Suspense, useState } from "react";
-import { Dice } from "../lib/components/Dice/Dice";
+import { DiceRoller } from "../lib/components/DiceRoller/DiceRoller";
 
 function App() {
   const [seed, setSeed] = useState(1);
@@ -8,7 +8,7 @@ function App() {
       <h1 style={{ fontFamily: "sans-serif", color: "wheat" }}>Dice</h1>
       <div style={{ width: 600, height: 600, background: "#2e262e" }}>
         <Suspense fallback={null}>
-          <Dice
+          <DiceRoller
             size={0.1}
             diceTypes={[
               "D4",

@@ -11,10 +11,10 @@
 // See https://storybook.js.org/docs/react/writing-stories/args.
 
 import type { Meta, StoryObj } from "@storybook/react";
-import { Dice } from "../../lib/components/Dice/Dice";
+import { DiceRoller } from "../../lib/components/DiceRoller/DiceRoller";
 
-const meta: Meta<typeof Dice> = {
-  component: Dice,
+const meta: Meta<typeof DiceRoller> = {
+  component: DiceRoller,
   decorators: [
     (Story) => (
       <div style={{ width: 600, height: 600, background: "#2e262e" }}>
@@ -26,7 +26,7 @@ const meta: Meta<typeof Dice> = {
 
 export default meta;
 
-type Story = StoryObj<typeof Dice>;
+type Story = StoryObj<typeof DiceRoller>;
 
 export const Primary: Story = {
   args: {
