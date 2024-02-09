@@ -108,13 +108,11 @@ const DicePlayback = ({
       frameRemainder = 0.0;
     }
 
-    if (diceGroups.current) {
-      for (let diceIndex = 0; diceIndex < sim.count; diceIndex++) {
-        const group = diceGroups.current[diceIndex];
+    for (let diceIndex = 0; diceIndex < sim.count; diceIndex++) {
+      const group = diceGroups.current[diceIndex];
 
-        if (group) {
-          updateDice(group, sim, diceIndex, frame, frameRemainder);
-        }
+      if (group) {
+        updateDice(group, sim, diceIndex, frame, frameRemainder);
       }
     }
   });
