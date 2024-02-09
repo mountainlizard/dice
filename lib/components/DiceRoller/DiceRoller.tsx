@@ -13,7 +13,7 @@ import { Dice, DiceVariant } from "../Dice/Dice";
 
 // forest, sunset, city and apartment are candidates here
 const env = import("@pmndrs/assets/hdri/forest.exr").then(
-  (module) => module.default
+  (module) => module.default as string
 );
 // const env = import("@pmndrs/assets/hdri/sunset.exr").then(
 //   (module) => module.default
