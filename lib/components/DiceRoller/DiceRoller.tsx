@@ -181,7 +181,7 @@ export type DiceRollerProps = {
   shadowColor?: string;
 };
 
-export const DiceRoller = ({
+const DiceRoller = ({
   size,
   diceTypes,
   dieVariants,
@@ -239,8 +239,6 @@ export const DiceRoller = ({
         />
 
         <Environment files={suspend(env) as string} />
-        {/* <Environment preset="city" /> */}
-        {/* <Environment preset="apartment" /> */}
 
         <Plane shadowColor={shadowColor} />
         {sim && (
@@ -256,3 +254,7 @@ export const DiceRoller = ({
     </Canvas>
   );
 };
+
+DiceRoller.displayName = "DiceRoller";
+
+export { DiceRoller };
