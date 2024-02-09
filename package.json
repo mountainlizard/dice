@@ -1,7 +1,7 @@
 {
   "name": "@trepidacious/dice",
-  "version": "1.0.0",
-  "license": "Apache-2.0",
+  "version": "0.0.0",
+  "license": "MIT",
   "type": "module",
   "module": "./dist/dice.js",
   "types": "./dist/dice.d.ts",
