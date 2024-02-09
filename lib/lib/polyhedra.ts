@@ -1,4 +1,4 @@
-import RAPIER from "@dimforge/rapier3d-compat";
+import RAPIER, { ColliderDesc } from "@dimforge/rapier3d-compat";
 import range from "./range";
 import { Quaternion, Vector3 } from "three";
 
@@ -438,6 +438,12 @@ const d8FaceInfo: FaceGeometryInfo[] = [
   },
 ];
 
+const convexMesh = (vertices: Float32Array): ColliderDesc => {
+  // Have checked Rapier code, and I can't see how a null is ever returned
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return RAPIER.ColliderDesc.convexMesh(vertices)!;
+};
+
 const d20DiceInfo: DiceInfo = {
   type: "D20",
   faceValues: [
@@ -445,7 +451,7 @@ const d20DiceInfo: DiceInfo = {
   ],
   faceInfo: icosahedronFaceInfo,
   colliderDescFromSize: (size: number) =>
-    RAPIER.ColliderDesc.convexMesh(icosahedronCollisionMeshVertices(size))!,
+    convexMesh(icosahedronCollisionMeshVertices(size)),
 };
 
 const cubeFaceInfo: FaceGeometryInfo[] = [
@@ -462,7 +468,7 @@ const d4DiceInfo: DiceInfo = {
   faceValues: range(4).map((value) => value + 1),
   faceInfo: d4FaceInfo,
   colliderDescFromSize: (size: number) =>
-    RAPIER.ColliderDesc.convexMesh(d4CollisionMeshVertices(size))!,
+    convexMesh(d4CollisionMeshVertices(size)),
   faceDownValue: true,
 };
 
@@ -479,7 +485,7 @@ const d8DiceInfo: DiceInfo = {
   faceValues: [1, 4, 6, 7, 2, 3, 5, 8],
   faceInfo: d8FaceInfo,
   colliderDescFromSize: (size: number) =>
-    RAPIER.ColliderDesc.convexMesh(d8CollisionMeshVertices(size))!,
+    convexMesh(d8CollisionMeshVertices(size)),
 };
 
 const d10DiceInfo: DiceInfo = {
@@ -487,7 +493,7 @@ const d10DiceInfo: DiceInfo = {
   faceValues: [6, 2, 8, 0, 4, 5, 9, 1, 7, 3],
   faceInfo: d10FaceInfo,
   colliderDescFromSize: (size: number) =>
-    RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
+    convexMesh(d10CollisionMeshVertices(size)),
 };
 
 const d10x10DiceInfo: DiceInfo = {
@@ -495,7 +501,7 @@ const d10x10DiceInfo: DiceInfo = {
   faceValues: [60, 20, 80, 0, 40, 50, 90, 10, 70, 30],
   faceInfo: d10FaceInfo,
   colliderDescFromSize: (size: number) =>
-    RAPIER.ColliderDesc.convexMesh(d10CollisionMeshVertices(size))!,
+    convexMesh(d10CollisionMeshVertices(size)),
 };
 
 const d12DiceInfo: DiceInfo = {
@@ -503,7 +509,7 @@ const d12DiceInfo: DiceInfo = {
   faceValues: range(12).map((value) => value + 1),
   faceInfo: d12FaceInfo,
   colliderDescFromSize: (size: number) =>
-    RAPIER.ColliderDesc.convexMesh(d12CollisionMeshVertices(size))!,
+    convexMesh(d12CollisionMeshVertices(size)),
 };
 
 /**
