@@ -20,8 +20,12 @@ const FaceVectors = ({ type, size }: FaceVectorsProps) => {
         p.copy(center);
         p.multiplyScalar(size);
         return (
+          // eslint-disable-next-line react/no-unknown-property
           <mesh key={i} position={p} onClick={() => console.log(i)}>
-            <boxGeometry args={[0.05, 0.05, 0.05]} />
+            <boxGeometry
+              // eslint-disable-next-line react/no-unknown-property
+              args={[0.05, 0.05, 0.05]}
+            />
             <meshStandardMaterial color="hotpink" />
           </mesh>
         );
@@ -71,12 +75,19 @@ export const DiceAlignment = () => {
     >
       <Suspense fallback={null}>
         <directionalLight
+          // eslint-disable-next-line react/no-unknown-property
           position={[3, 10, 3]}
+          // eslint-disable-next-line react/no-unknown-property
           castShadow
+          // eslint-disable-next-line react/no-unknown-property
           shadow-mapSize-height={1024}
+          // eslint-disable-next-line react/no-unknown-property
           shadow-mapSize-width={1024}
+          // eslint-disable-next-line react/no-unknown-property
           shadow-radius={0.1}
+          // eslint-disable-next-line react/no-unknown-property
           shadow-bias={-0.0001}
+          // eslint-disable-next-line react/no-unknown-property
           intensity={3.0}
         />
 

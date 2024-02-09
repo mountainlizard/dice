@@ -33,8 +33,16 @@ type PlaneProps = {
 
 const Plane = ({ shadowColor }: PlaneProps) => {
   return (
-    <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[5, 5]} />
+    <mesh
+      // eslint-disable-next-line react/no-unknown-property
+      receiveShadow
+      // eslint-disable-next-line react/no-unknown-property
+      rotation={[-Math.PI / 2, 0, 0]}
+    >
+      <planeGeometry
+        // eslint-disable-next-line react/no-unknown-property
+        args={[5, 5]}
+      />
       <shadowMaterial color={shadowColor ?? defaultShadowColor} />
     </mesh>
   );
@@ -214,12 +222,19 @@ export const DiceRoller = ({
     >
       <Suspense fallback={null}>
         <directionalLight
+          // eslint-disable-next-line react/no-unknown-property
           position={[3, 10, 3]}
+          // eslint-disable-next-line react/no-unknown-property
           castShadow
+          // eslint-disable-next-line react/no-unknown-property
           shadow-mapSize-height={1024}
+          // eslint-disable-next-line react/no-unknown-property
           shadow-mapSize-width={1024}
+          // eslint-disable-next-line react/no-unknown-property
           shadow-radius={0.1}
+          // eslint-disable-next-line react/no-unknown-property
           shadow-bias={-0.0001}
+          // eslint-disable-next-line react/no-unknown-property
           intensity={0.0}
         />
 

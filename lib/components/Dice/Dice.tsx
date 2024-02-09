@@ -185,13 +185,19 @@ const Dice = forwardRef<Group, DiceProps>(
     }
 
     return (
+      // eslint-disable-next-line react/no-unknown-property
       <group ref={ref} dispose={null}>
         <mesh
+          // eslint-disable-next-line react/no-unknown-property
           quaternion={meshQuaternion}
           scale={[size, size, size]}
+          // eslint-disable-next-line react/no-unknown-property
           castShadow
+          // eslint-disable-next-line react/no-unknown-property
           receiveShadow
+          // eslint-disable-next-line react/no-unknown-property
           geometry={geometry}
+          // eslint-disable-next-line react/no-unknown-property
           material={material}
         />
       </group>
