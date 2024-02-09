@@ -1,28 +1,28 @@
 class Rando {
-  seed: number
+  seed: number;
 
   constructor(initialSeed: number) {
-    this.seed = initialSeed % 2147483647
+    this.seed = initialSeed % 2147483647;
     if (this.seed <= 0) {
-      this.seed += 2147483646
+      this.seed += 2147483646;
     }
-    this.next()
-    this.next()
-    this.next()
-    this.next()
+    this.next();
+    this.next();
+    this.next();
+    this.next();
   }
 
   next(a = 0, b = 1) {
-    this.seed = (this.seed * 16807) % 2147483647
-    return (this.seed / 2147483647) * (b - a) + a
+    this.seed = (this.seed * 16807) % 2147483647;
+    return (this.seed / 2147483647) * (b - a) + a;
   }
 
   nextSymRange(range = 1) {
-    return range * (this.next() - 0.5)
+    return range * (this.next() - 0.5);
   }
 }
 
-export default Rando
+export default Rando;
 
 //TODO maybe try this from https://github.com/bryc/code/blob/master/jshash/PRNGs.md#splitmix32
 

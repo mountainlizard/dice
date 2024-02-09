@@ -3,7 +3,7 @@ import { Suspense, useRef, useState, useEffect } from "react";
 import { Environment } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { suspend } from "suspend-react";
-import { Group, Object3DEventMap, Quaternion } from "three";
+import { Group, Quaternion } from "three";
 
 import range from "../../lib/range";
 import { runDiceSimulation, DiceSimulation } from "../../lib/runDiceSimulation";
@@ -27,9 +27,9 @@ const env = import("@pmndrs/assets/hdri/forest.exr").then(
 
 const defaultShadowColor = "#2e262e";
 
-interface PlaneProps {
+type PlaneProps = {
   shadowColor?: string;
-}
+};
 
 const Plane = ({ shadowColor }: PlaneProps) => {
   return (
@@ -43,7 +43,7 @@ const Plane = ({ shadowColor }: PlaneProps) => {
 const diceUpdateNextQuaternion = new Quaternion();
 
 const updateDice = (
-  group: Group<Object3DEventMap>,
+  group: Group,
   sim: DiceSimulation,
   diceIndex: number,
   frame: number,
@@ -70,13 +70,13 @@ const updateDice = (
 
 const physicsFrameRate = 60;
 
-interface DicePlaybackProps {
+type DicePlaybackProps = {
   sim: DiceSimulation;
   diceTypes: DiceType[];
   dieVariants: DiceVariant[];
   desiredRolls?: number[];
   startTime: React.MutableRefObject<number | null>;
-}
+};
 
 const DicePlayback = ({
   sim,
@@ -86,7 +86,7 @@ const DicePlayback = ({
   startTime,
 }: DicePlaybackProps) => {
   // We need a reference to the Group for each die - therefore we use an array
-  const diceGroups = useRef<(Group<Object3DEventMap> | null)[]>([]);
+  const diceGroups = useRef<(Group | null)[]>([]);
 
   // Use the sim to update the position and rotation of each die
   useFrame(({ clock }) => {
@@ -166,14 +166,14 @@ const DicePlayback = ({
   );
 };
 
-export interface DiceRollerProps {
+export type DiceRollerProps = {
   size: number;
   diceTypes: DiceType[];
   dieVariants: DiceVariant[];
   seed: number;
   desiredRolls?: number[];
   shadowColor?: string;
-}
+};
 
 export const DiceRoller = ({
   size,
@@ -187,7 +187,11 @@ export const DiceRoller = ({
   const [sim, setSim] = useState<DiceSimulation | null>(null);
 
   useEffect(() => {
-    runDiceSimulation(size, diceTypes, seed, maxTicks).then((s) => setSim(s));
+    runDiceSimulation(size, diceTypes, seed, maxTicks)
+      .then((s) => setSim(s))
+      .catch((reason) => {
+        console.error(reason);
+      });
   }, [size, diceTypes, seed]);
 
   // The (react-three-fiber) time the current simulation started playing, or null

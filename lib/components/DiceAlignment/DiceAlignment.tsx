@@ -6,10 +6,10 @@ import { Quaternion, Vector3 } from "three";
 import { DiceType, diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
 import { Dice } from "../Dice/Dice";
 
-interface FaceVectorsProps {
+type FaceVectorsProps = {
   type: DiceType;
   size: number;
-}
+};
 
 const FaceVectors = ({ type, size }: FaceVectorsProps) => {
   const diceInfo = diceSetInfo[type];
@@ -30,12 +30,12 @@ const FaceVectors = ({ type, size }: FaceVectorsProps) => {
   );
 };
 
-interface RotatedDieProps {
+type RotatedDieProps = {
   type: DiceType;
   size: number;
   faceFrom: number;
   faceTo: number;
-}
+};
 
 const RotatedDie = ({ type, size, faceFrom, faceTo }: RotatedDieProps) => {
   // Each die must have its own quaternion - it's mutable,

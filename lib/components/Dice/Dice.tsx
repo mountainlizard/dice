@@ -1,24 +1,18 @@
 import { forwardRef } from "react";
 
 import { useGLTF } from "@react-three/drei";
-import {
-  BufferGeometry,
-  Group,
-  NormalBufferAttributes,
-  Object3DEventMap,
-  Quaternion,
-} from "three";
+import { BufferGeometry, Group, Quaternion } from "three";
 
 import { DiceType } from "../../lib/polyhedra";
 
 export type DiceVariant = "Normal" | "Advantage" | "Disadvantage";
 
-export interface DiceProps {
+export type DiceProps = {
   type: DiceType;
   variant: DiceVariant;
   size: number;
   meshQuaternion: Quaternion;
-}
+};
 
 useGLTF.preload("/D4.glb");
 useGLTF.preload("/D4Gilded.glb");
@@ -42,7 +36,7 @@ useGLTF.preload("/D20.glb");
 useGLTF.preload("/D20Gilded.glb");
 useGLTF.preload("/D20Disadvantage.glb");
 
-export const Dice = forwardRef<Group<Object3DEventMap>, DiceProps>(
+const Dice = forwardRef<Group, DiceProps>(
   ({ type, variant, size, meshQuaternion }, ref) => {
     const d4Plain = useGLTF("/D4.glb");
     const d4Gilded = useGLTF("/D4Gilded.glb");
@@ -127,8 +121,9 @@ export const Dice = forwardRef<Group<Object3DEventMap>, DiceProps>(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const geometry = (model as any)[
+      // eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/no-unsafe-member-access
       "geometry"
-    ] as BufferGeometry<NormalBufferAttributes>;
+    ] as BufferGeometry;
 
     let material = d6Plain.materials.D6;
     if (type == "D4") {
@@ -203,3 +198,7 @@ export const Dice = forwardRef<Group<Object3DEventMap>, DiceProps>(
     );
   }
 );
+
+Dice.displayName = "Dice";
+
+export { Dice };

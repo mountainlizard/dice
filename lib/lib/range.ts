@@ -1,5 +1,5 @@
 const range = (n: number): number[] => {
-  return Array.from(Array(n).keys())
-}
+  return Array.from(Array(n).keys());
+};
 
-export default range
+export default range;
