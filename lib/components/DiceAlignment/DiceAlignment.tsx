@@ -3,8 +3,9 @@ import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Quaternion, Vector3 } from "three";
 
-import { DiceType, diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
+import { diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
 import { Dice } from "../Dice/Dice";
+import { DiceType } from "../..";
 
 type FaceVectorsProps = {
   type: DiceType;

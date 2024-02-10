@@ -8,8 +8,9 @@ import { Group, Quaternion } from "three";
 import range from "../../lib/range";
 import { runDiceSimulation, DiceSimulation } from "../../lib/runDiceSimulation";
 import { lerp } from "three/src/math/MathUtils.js";
-import { DiceType, diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
+import { diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
 import { Dice, DiceVariant } from "../Dice/Dice";
+import { DiceType } from "../..";
 
 // forest, sunset, city and apartment are candidates here
 const env = import("@pmndrs/assets/hdri/forest.exr").then(

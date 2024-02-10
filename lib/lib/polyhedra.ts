@@ -1,6 +1,7 @@
 import RAPIER, { ColliderDesc } from "@dimforge/rapier3d-compat";
 import range from "./range";
 import { Quaternion, Vector3 } from "three";
+import { DiceType } from "..";
 
 // The data in this file is taken from blender meshes for the relevant
 // polyhedra.
@@ -575,8 +576,6 @@ export type DiceInfo = {
   colliderDescFromSize: (size: number) => RAPIER.ColliderDesc;
   faceDownValue?: boolean;
 };
-
-export type DiceType = "D4" | "D6" | "D8" | "D10" | "D10x10" | "D12" | "D20";
 
 export type DiceSetInfo = Record<DiceType, DiceInfo>;
 

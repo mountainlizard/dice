@@ -4,7 +4,8 @@ import { toQuaternion } from "./rapierToThree";
 import Rando from "./rando";
 import range from "./range";
 import rapierInit from "./rapierInit";
-import { DiceType, diceSetInfo, rotationToFaceUpIndex } from "./polyhedra";
+import { diceSetInfo, rotationToFaceUpIndex } from "./polyhedra";
+import { DiceType } from "..";
 
 const boundaryThickness = 0.3;
 const boundaryRestitution = 0.5;
