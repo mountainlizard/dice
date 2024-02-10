@@ -45,6 +45,8 @@ function App() {
             ]}
             seed={seed}
             desiredRolls={[1, 2, 3, 4, 50, 6, 7, 4, 6, 8, 9, 90, 12, 20]}
+            shadowColor="#000000"
+            shadowOpacity={0.2}
           />
         </Suspense>
       </div>

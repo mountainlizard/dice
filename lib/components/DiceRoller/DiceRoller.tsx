@@ -30,9 +30,10 @@ const defaultShadowColor = "#2e262e";
 
 type PlaneProps = {
   shadowColor?: string;
+  shadowOpacity?: number;
 };
 
-const Plane = ({ shadowColor }: PlaneProps) => {
+const Plane = ({ shadowColor, shadowOpacity }: PlaneProps) => {
   return (
     <mesh
       // eslint-disable-next-line react/no-unknown-property
@@ -44,7 +45,10 @@ const Plane = ({ shadowColor }: PlaneProps) => {
         // eslint-disable-next-line react/no-unknown-property
         args={[5, 5]}
       />
-      <shadowMaterial color={shadowColor ?? defaultShadowColor} />
+      <shadowMaterial
+        color={shadowColor ?? defaultShadowColor}
+        opacity={shadowOpacity}
+      />
     </mesh>
   );
 };
@@ -180,6 +184,7 @@ export type DiceRollerProps = {
   seed: number;
   desiredRolls?: number[];
   shadowColor?: string;
+  shadowOpacity?: number;
 };
 
 const DiceRoller = ({
@@ -189,6 +194,7 @@ const DiceRoller = ({
   seed,
   desiredRolls,
   shadowColor,
+  shadowOpacity,
 }: DiceRollerProps) => {
   const maxTicks = 600;
   const [sim, setSim] = useState<DiceSimulation | null>(null);
@@ -241,7 +247,7 @@ const DiceRoller = ({
 
         <Environment files={suspend(env) as string} />
 
-        <Plane shadowColor={shadowColor} />
+        <Plane shadowColor={shadowColor} shadowOpacity={shadowOpacity} />
         {sim && (
           <DicePlayback
             diceTypes={diceTypes}
