@@ -7,7 +7,6 @@ import rapierInit from "./rapierInit";
 import { diceSetInfo, rotationToFaceUpIndex } from "./polyhedra";
 import { DiceType } from "..";
 
-const boundaryThickness = 0.3;
 const boundaryRestitution = 0.5;
 const tableRestitution = 0.2;
 const diceRestitution = 0.2;
@@ -84,19 +83,30 @@ const addDice = (
   return rigidBody;
 };
 
-const addBoundaries = (world: RAPIER.World) => {
-  const tableColliderDesc = RAPIER.ColliderDesc.cuboid(20.0, 1, 20.0)
+const addBoundaries = (
+  world: RAPIER.World,
+  size: number,
+  halfWidth: number,
+  halfHeight: number
+) => {
+  const tableColliderDesc = RAPIER.ColliderDesc.cuboid(
+    20.0 * halfWidth,
+    1,
+    20.0 * halfHeight
+  )
     .setTranslation(0, -1, 0)
     .setRestitution(tableRestitution)
     .setFriction(tableFriction);
   world.createCollider(tableColliderDesc);
+
+  const boundaryThickness = size * 2.75;
 
   const wall1ColliderDesc = RAPIER.ColliderDesc.cuboid(
     boundaryThickness,
     20,
     20.0
   )
-    .setTranslation(1, -1, 0)
+    .setTranslation(halfWidth, -1, 0)
     .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall1ColliderDesc);
@@ -106,7 +116,7 @@ const addBoundaries = (world: RAPIER.World) => {
     20,
     20.0
   )
-    .setTranslation(-1, -1, 0)
+    .setTranslation(-halfWidth, -1, 0)
     .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall2ColliderDesc);
@@ -116,7 +126,7 @@ const addBoundaries = (world: RAPIER.World) => {
     20,
     boundaryThickness
   )
-    .setTranslation(0, -1, 1)
+    .setTranslation(0, -1, halfHeight)
     .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall3ColliderDesc);
@@ -126,7 +136,7 @@ const addBoundaries = (world: RAPIER.World) => {
     20,
     boundaryThickness
   )
-    .setTranslation(0, -1, -1)
+    .setTranslation(0, -1, -halfHeight)
     .setRestitution(boundaryRestitution)
     .setFriction(0);
   world.createCollider(wall4ColliderDesc);
@@ -139,6 +149,8 @@ export type DiceWorld = {
 
 const createDiceWorld = (
   size: number,
+  halfWidth: number,
+  halfHeight: number,
   diceTypes: DiceType[],
   seed: number
 ): DiceWorld => {
@@ -147,7 +159,7 @@ const createDiceWorld = (
   const gravity = { x: 0.0, y: -9.81, z: 0.0 };
   const world = new RAPIER.World(gravity);
 
-  addBoundaries(world);
+  addBoundaries(world, size, halfWidth, halfHeight);
 
   const diceBodies = diceTypes.map((type, i) =>
     addDice(world, i, diceTypes.length, size, type, r)
@@ -173,6 +185,8 @@ export type DiceSimulation = {
 
 const runDiceSimulation = async (
   size: number,
+  halfWidth: number,
+  halfHeight: number,
   diceTypes: DiceType[],
   seed: number,
   maxTicks: number
@@ -183,7 +197,13 @@ const runDiceSimulation = async (
 
   const count = diceTypes.length;
 
-  const { world, diceBodies } = createDiceWorld(size, diceTypes, seed);
+  const { world, diceBodies } = createDiceWorld(
+    size,
+    halfWidth,
+    halfHeight,
+    diceTypes,
+    seed
+  );
 
   const diceHistories = range(count).map(() => {
     const positions = new Array<RAPIER.Vector>(maxTicks);

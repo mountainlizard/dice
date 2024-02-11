@@ -6,10 +6,19 @@ function App() {
   return (
     <>
       <h1 style={{ fontFamily: "sans-serif", color: "wheat" }}>Dice</h1>
-      <div style={{ width: 600, height: 600, background: "#2e262e" }}>
+      <div
+        style={{
+          width: 600,
+          height: 300,
+          background: "#2e262e",
+          border: "1px solid bisque",
+        }}
+      >
         <Suspense fallback={null}>
           <DiceRoller
-            size={0.1}
+            size={0.15}
+            halfWidth={2}
+            halfHeight={1}
             diceTypes={[
               "D4",
               "D6",

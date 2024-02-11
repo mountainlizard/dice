@@ -179,6 +179,8 @@ const DicePlayback = ({
 
 export type DiceRollerProps = {
   size: number;
+  halfWidth?: number;
+  halfHeight?: number;
   diceTypes: DiceType[];
   dieVariants: DiceVariant[];
   seed: number;
@@ -189,6 +191,8 @@ export type DiceRollerProps = {
 
 const DiceRoller = ({
   size,
+  halfWidth,
+  halfHeight,
   diceTypes,
   dieVariants,
   seed,
@@ -200,12 +204,19 @@ const DiceRoller = ({
   const [sim, setSim] = useState<DiceSimulation | null>(null);
 
   useEffect(() => {
-    runDiceSimulation(size, diceTypes, seed, maxTicks)
+    runDiceSimulation(
+      size,
+      halfWidth ?? 1,
+      halfHeight ?? 1,
+      diceTypes,
+      seed,
+      maxTicks
+    )
       .then((s) => setSim(s))
       .catch((reason) => {
         console.error(reason);
       });
-  }, [size, diceTypes, seed]);
+  }, [size, diceTypes, seed, halfWidth, halfHeight]);
 
   // The (react-three-fiber) time the current simulation started playing, or null
   // if it has not yet started
