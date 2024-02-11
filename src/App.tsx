@@ -9,15 +9,15 @@ function App() {
       <div
         style={{
           width: 600,
-          height: 300,
+          height: 600,
           background: "#2e262e",
           border: "1px solid bisque",
         }}
       >
         <Suspense fallback={null}>
           <DiceRoller
-            size={0.15}
-            halfWidth={2}
+            size={0.1}
+            halfWidth={1}
             halfHeight={1}
             diceTypes={[
               "D4",
