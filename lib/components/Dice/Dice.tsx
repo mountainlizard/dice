@@ -201,7 +201,7 @@ const Dice = forwardRef<Group, DiceProps>(
         />
       </group>
     );
-  }
+  },
 );
 
 Dice.displayName = "Dice";
