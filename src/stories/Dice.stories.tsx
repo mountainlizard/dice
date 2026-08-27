@@ -10,7 +10,7 @@
 //
 // See https://storybook.js.org/docs/react/writing-stories/args.
 
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DiceRoller } from "../../lib/components/DiceRoller/DiceRoller";
 
 const meta: Meta<typeof DiceRoller> = {

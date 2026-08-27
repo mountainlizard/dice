@@ -1,0 +1,20 @@
+{
+  "typescript": {},
+  "json": {},
+  "markdown": {},
+  "toml": {},
+  "malva": {},
+  "markup": {
+    "scriptIndent": true,
+    "styleIndent": true
+  },
+  "excludes": ["**/node_modules", "**/*-lock.json"],
+  "plugins": [
+    "npm:@dprint/typescript@0.96.1",
+    "npm:@dprint/json@0.23.0",
+    "npm:@dprint/markdown@0.22.1",
+    "npm:@dprint/toml@0.8.0",
+    "npm:dprint-plugin-malva@0.16.0",
+    "npm:dprint-plugin-markup@0.27.3"
+  ]
+}
