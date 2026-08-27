@@ -2,11 +2,24 @@
 
 Deterministic 3D dice rolling library for React.
 
+Versions:
+
+- `v1` releases work with react 18.
+- `v2` releases work with react 19.
+
 ## Local Development
 
-Check out, `npm install`, `npm run build`, then `npm link` to make the package available locally. To import to another project, run `npm link @trepidacious/dice` in that project, this will add the local build `dice`, it can be imported normally.
+To just run directly, `npm install` and then `npm run dev`.
+
+To set up a link to allow live development of `dice` as used by another local project, run `npm install`, `npm run build`, then `npm link` to make the package available locally. To import to another project, run `npm link @trepidacious/dice` in that project, this will add the local build `dice`, it can be imported normally.
 
 After changing `dice` code, run `npm run build` again, changes should be available in any linked projects immediately.
+
+Note that this was originally created with `npm create vite --template=react-ts`, so that template can be used to update configuration files etc.
+
+## Storybook
+
+A simple storybook setup is provided to allow testing different dice settings, try `npm run storybook`.
 
 ## Notes on Dice Models
 
