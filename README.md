@@ -52,3 +52,10 @@ Every piece of 3D software has to use a different coordinate system, according t
 - `Three.js`: `(x: 1, y: 3, z: -2)`
 
 To convert from Blender to `Three.js`, we swap the y and z values, then make the z value negative. This is handy when e.g. trying to get face corner vertex coordinates, where it's easier to select them in blender and read off coordinates than to try to work out which vertex in an exported `.glb` file is which.
+
+## Known Issues
+
+You may see the following warnings in the console - these should be fixed when `react-three-fiber` `v10` is released:
+
+1. `THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.`
+2. `THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.`
