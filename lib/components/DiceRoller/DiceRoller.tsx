@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import { Environment } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -88,7 +88,7 @@ type DicePlaybackProps = {
   diceTypes: DiceType[];
   dieVariants: DiceVariant[];
   desiredRolls?: number[];
-  startTime: React.RefObject<number | null>;
+  updateStartTime: (elapsedTime: number) => number;
 };
 
 const DicePlayback = ({
@@ -96,7 +96,7 @@ const DicePlayback = ({
   diceTypes,
   dieVariants,
   desiredRolls,
-  startTime,
+  updateStartTime,
 }: DicePlaybackProps) => {
   // We need a reference to the Group for each die - therefore we use an array
   const diceGroups = useRef<(Group | null)[]>([]);
@@ -104,10 +104,8 @@ const DicePlayback = ({
   // Use the sim to update the position and rotation of each die
   useFrame(({ clock }) => {
     const elapsedTime = clock.elapsedTime;
-    if (!startTime.current) {
-      startTime.current = elapsedTime;
-    }
-    const simTime = elapsedTime - startTime.current;
+    const startTime = updateStartTime(elapsedTime);
+    const simTime = elapsedTime - startTime;
 
     const frameFractional = simTime * physicsFrameRate;
     let frame = Math.floor(frameFractional);
@@ -230,6 +228,18 @@ const DiceRoller = ({
     return undefined;
   }, [sim]);
 
+  // This allows updating the start time to a given elapsedTime (if it's
+  // not already set), and then returning the resulting start time.
+  // We need this since the startTime state needs to be in this
+  // component, but we can only access the elapsedTime for the
+  // rendered frames inside the `Canvas`, using a `Clock`.
+  const updateStartTime = useCallback((elapsedTime: number) => {
+    if (!startTime.current) {
+      startTime.current = elapsedTime;
+    }
+    return startTime.current;
+  }, [startTime]);
+
   return (
     <Canvas
       shadows
@@ -267,7 +277,7 @@ const DiceRoller = ({
             dieVariants={dieVariants}
             sim={sim}
             desiredRolls={desiredRolls}
-            startTime={startTime}
+            updateStartTime={updateStartTime}
           />
         )}
       </Suspense>
