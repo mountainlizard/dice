@@ -16,7 +16,7 @@ export default defineConfig({
     copyPublicDir: false,
     lib: {
       // this is the file that exports our components
-      entry: resolve(__dirname, "lib/index.ts"),
+      entry: resolve(import.meta.dirname, "lib/index.ts"),
       name: "dice",
       fileName: "dice",
       formats: ["es"],
