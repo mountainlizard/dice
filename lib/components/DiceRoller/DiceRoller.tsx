@@ -1,20 +1,20 @@
-import { Suspense, useRef, useState, useEffect } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 
 import { Environment } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { suspend } from "suspend-react";
 import { Group, Quaternion } from "three";
 
-import range from "../../lib/range";
-import { runDiceSimulation, DiceSimulation } from "../../lib/runDiceSimulation";
 import { lerp } from "three/src/math/MathUtils.js";
-import { diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
-import { Dice, DiceVariant } from "../Dice/Dice";
 import { DiceType } from "../..";
+import { diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
+import range from "../../lib/range";
+import { DiceSimulation, runDiceSimulation } from "../../lib/runDiceSimulation";
+import { Dice, DiceVariant } from "../Dice/Dice";
 
 // forest, sunset, city and apartment are candidates here
 const env = import("@pmndrs/assets/hdri/forest.exr").then(
-  (module) => module.default as string
+  (module) => module.default as string,
 );
 // const env = import("@pmndrs/assets/hdri/sunset.exr").then(
 //   (module) => module.default
@@ -60,7 +60,7 @@ const updateDice = (
   sim: DiceSimulation,
   diceIndex: number,
   frame: number,
-  frameRemainder: number
+  frameRemainder: number,
 ) => {
   const position = sim.diceHistories[diceIndex].positions[frame];
   const positionNext = sim.diceHistories[diceIndex].positions[frame + 1];
@@ -74,7 +74,7 @@ const updateDice = (
     rotationNext.x,
     rotationNext.y,
     rotationNext.z,
-    rotationNext.w
+    rotationNext.w,
   );
   group.quaternion
     .set(rotation.x, rotation.y, rotation.z, rotation.w)
@@ -88,7 +88,7 @@ type DicePlaybackProps = {
   diceTypes: DiceType[];
   dieVariants: DiceVariant[];
   desiredRolls?: number[];
-  startTime: React.MutableRefObject<number | null>;
+  startTime: React.RefObject<number | null>;
 };
 
 const DicePlayback = ({
@@ -149,7 +149,7 @@ const DicePlayback = ({
         const desiredRoll = desiredRolls ? desiredRolls[diceIndex] : undefined;
         if (desiredRoll !== undefined) {
           const desiredFaceIndex = diceInfo.faceValues.findIndex(
-            (faceValue) => faceValue == desiredRoll
+            (faceValue) => faceValue == desiredRoll,
           );
           if (desiredFaceIndex > -1) {
             const faceUpIndex = sim.diceHistories[diceIndex].faceUpIndex;
@@ -157,7 +157,7 @@ const DicePlayback = ({
               diceType,
               desiredFaceIndex,
               faceUpIndex,
-              meshQuaternion
+              meshQuaternion,
             );
           }
         }
@@ -210,7 +210,7 @@ const DiceRoller = ({
       halfHeight ?? 1,
       diceTypes,
       seed,
-      maxTicks
+      maxTicks,
     )
       .then((s) => setSim(s))
       .catch((reason) => {
