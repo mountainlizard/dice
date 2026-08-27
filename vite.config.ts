@@ -19,7 +19,7 @@ export default defineConfig({
       fileName: "dice",
       formats: ["es"],
     },
-    rollupOptions: {
+    rolldownOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
       external: [
