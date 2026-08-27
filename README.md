@@ -15,7 +15,7 @@ To set up a link to allow live development of `dice` as used by another local pr
 
 After changing `dice` code, run `npm run build` again, changes should be available in any linked projects immediately.
 
-Note that this was originally created with `npm create vite --template=react-ts`, so that template can be used to update configuration files etc.
+Note that this was originally created with `npm create vite@latest` using React and TypeScript options. Configuration files can be updated based on this - most recently this was done with `Oxlint` selected as the linter.
 
 ## Storybook
 
