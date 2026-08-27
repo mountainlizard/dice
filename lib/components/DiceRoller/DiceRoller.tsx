@@ -167,7 +167,9 @@ const DicePlayback = ({
             key={diceIndex}
             type={diceType}
             variant={dieVariant}
-            ref={(el) => (diceGroups.current[diceIndex] = el)}
+            ref={(el) => {
+              diceGroups.current[diceIndex] = el;
+            }}
             size={sim.size}
             meshQuaternion={meshQuaternion}
           />
