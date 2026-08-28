@@ -2,11 +2,28 @@
 
 Deterministic 3D dice rolling library for React.
 
+Versions:
+
+- `v1` releases work with react 18.
+- `v2` releases work with react 19.
+
 ## Local Development
 
-Check out, `npm install`, `npm run build`, then `npm link` to make the package available locally. To import to another project, run `npm link @trepidacious/dice` in that project, this will add the local build `dice`, it can be imported normally.
+To just run directly, `npm install` and then `npm run dev`.
+
+To set up a link to allow live development of `dice` as used by another local project, run `npm install`, `npm run build`, then `npm link` to make the package available locally. To import to another project, run `npm link @trepidacious/dice` in that project, this will add the local build `dice`, it can be imported normally.
 
 After changing `dice` code, run `npm run build` again, changes should be available in any linked projects immediately.
+
+Note that this was originally created with `npm create vite@latest` using React and TypeScript options. Configuration files can be updated based on this - most recently this was done with `Oxlint` selected as the linter.
+
+## Linting
+
+Run `npm run lint` for `oxlint`, you can also run `tsc` for actual TypeScript errors.
+
+## Storybook
+
+A simple storybook setup is provided to allow testing different dice settings, try `npm run storybook`.
 
 ## Notes on Dice Models
 
@@ -39,3 +56,10 @@ Every piece of 3D software has to use a different coordinate system, according t
 - `Three.js`: `(x: 1, y: 3, z: -2)`
 
 To convert from Blender to `Three.js`, we swap the y and z values, then make the z value negative. This is handy when e.g. trying to get face corner vertex coordinates, where it's easier to select them in blender and read off coordinates than to try to work out which vertex in an exported `.glb` file is which.
+
+## Known Issues
+
+You may see the following warnings in the console - these should be fixed when `react-three-fiber` `v10` is released:
+
+1. `THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.`
+2. `THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.`

@@ -1,20 +1,20 @@
-import { Suspense, useRef, useState, useEffect } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 
 import { Environment } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { suspend } from "suspend-react";
 import { Group, Quaternion } from "three";
 
-import range from "../../lib/range";
-import { runDiceSimulation, DiceSimulation } from "../../lib/runDiceSimulation";
 import { lerp } from "three/src/math/MathUtils.js";
-import { diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
-import { Dice, DiceVariant } from "../Dice/Dice";
 import { DiceType } from "../..";
+import { diceSetInfo, rotateFaceToFace } from "../../lib/polyhedra";
+import range from "../../lib/range";
+import { DiceSimulation, runDiceSimulation } from "../../lib/runDiceSimulation";
+import { Dice, DiceVariant } from "../Dice/Dice";
 
 // forest, sunset, city and apartment are candidates here
 const env = import("@pmndrs/assets/hdri/forest.exr").then(
-  (module) => module.default as string
+  (module) => module.default as string,
 );
 // const env = import("@pmndrs/assets/hdri/sunset.exr").then(
 //   (module) => module.default
@@ -60,7 +60,7 @@ const updateDice = (
   sim: DiceSimulation,
   diceIndex: number,
   frame: number,
-  frameRemainder: number
+  frameRemainder: number,
 ) => {
   const position = sim.diceHistories[diceIndex].positions[frame];
   const positionNext = sim.diceHistories[diceIndex].positions[frame + 1];
@@ -74,7 +74,7 @@ const updateDice = (
     rotationNext.x,
     rotationNext.y,
     rotationNext.z,
-    rotationNext.w
+    rotationNext.w,
   );
   group.quaternion
     .set(rotation.x, rotation.y, rotation.z, rotation.w)
@@ -88,7 +88,7 @@ type DicePlaybackProps = {
   diceTypes: DiceType[];
   dieVariants: DiceVariant[];
   desiredRolls?: number[];
-  startTime: React.MutableRefObject<number | null>;
+  updateStartTime: (elapsedTime: number) => number;
 };
 
 const DicePlayback = ({
@@ -96,7 +96,7 @@ const DicePlayback = ({
   diceTypes,
   dieVariants,
   desiredRolls,
-  startTime,
+  updateStartTime,
 }: DicePlaybackProps) => {
   // We need a reference to the Group for each die - therefore we use an array
   const diceGroups = useRef<(Group | null)[]>([]);
@@ -104,10 +104,8 @@ const DicePlayback = ({
   // Use the sim to update the position and rotation of each die
   useFrame(({ clock }) => {
     const elapsedTime = clock.elapsedTime;
-    if (!startTime.current) {
-      startTime.current = elapsedTime;
-    }
-    const simTime = elapsedTime - startTime.current;
+    const startTime = updateStartTime(elapsedTime);
+    const simTime = elapsedTime - startTime;
 
     const frameFractional = simTime * physicsFrameRate;
     let frame = Math.floor(frameFractional);
@@ -149,7 +147,7 @@ const DicePlayback = ({
         const desiredRoll = desiredRolls ? desiredRolls[diceIndex] : undefined;
         if (desiredRoll !== undefined) {
           const desiredFaceIndex = diceInfo.faceValues.findIndex(
-            (faceValue) => faceValue == desiredRoll
+            (faceValue) => faceValue == desiredRoll,
           );
           if (desiredFaceIndex > -1) {
             const faceUpIndex = sim.diceHistories[diceIndex].faceUpIndex;
@@ -157,7 +155,7 @@ const DicePlayback = ({
               diceType,
               desiredFaceIndex,
               faceUpIndex,
-              meshQuaternion
+              meshQuaternion,
             );
           }
         }
@@ -167,7 +165,9 @@ const DicePlayback = ({
             key={diceIndex}
             type={diceType}
             variant={dieVariant}
-            ref={(el) => (diceGroups.current[diceIndex] = el)}
+            ref={(el) => {
+              diceGroups.current[diceIndex] = el;
+            }}
             size={sim.size}
             meshQuaternion={meshQuaternion}
           />
@@ -210,7 +210,7 @@ const DiceRoller = ({
       halfHeight ?? 1,
       diceTypes,
       seed,
-      maxTicks
+      maxTicks,
     )
       .then((s) => setSim(s))
       .catch((reason) => {
@@ -227,6 +227,18 @@ const DiceRoller = ({
     startTime.current = null;
     return undefined;
   }, [sim]);
+
+  // This allows updating the start time to a given elapsedTime (if it's
+  // not already set), and then returning the resulting start time.
+  // We need this since the startTime state needs to be in this
+  // component, but we can only access the elapsedTime for the
+  // rendered frames inside the `Canvas`, using a `Clock`.
+  const updateStartTime = useCallback((elapsedTime: number) => {
+    if (!startTime.current) {
+      startTime.current = elapsedTime;
+    }
+    return startTime.current;
+  }, [startTime]);
 
   return (
     <Canvas
@@ -265,7 +277,7 @@ const DiceRoller = ({
             dieVariants={dieVariants}
             sim={sim}
             desiredRolls={desiredRolls}
-            startTime={startTime}
+            updateStartTime={updateStartTime}
           />
         )}
       </Suspense>
