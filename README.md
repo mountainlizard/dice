@@ -17,6 +17,10 @@ After changing `dice` code, run `npm run build` again, changes should be availab
 
 Note that this was originally created with `npm create vite@latest` using React and TypeScript options. Configuration files can be updated based on this - most recently this was done with `Oxlint` selected as the linter.
 
+## Linting
+
+Run `npm run lint` for `oxlint`, you can also run `tsc` for actual TypeScript errors.
+
 ## Storybook
 
 A simple storybook setup is provided to allow testing different dice settings, try `npm run storybook`.
