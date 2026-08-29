@@ -252,22 +252,17 @@ const DiceRoller = ({
     >
       <Suspense fallback={null}>
         <directionalLight
-          // eslint-disable-next-line react/no-unknown-property
           position={[3, 10, 3]}
-          // eslint-disable-next-line react/no-unknown-property
           castShadow
-          // eslint-disable-next-line react/no-unknown-property
-          shadow-mapSize-height={1024}
-          // eslint-disable-next-line react/no-unknown-property
-          shadow-mapSize-width={1024}
-          // eslint-disable-next-line react/no-unknown-property
-          shadow-radius={0.1}
-          // eslint-disable-next-line react/no-unknown-property
+          shadow-mapSize={2048}
+          shadow-radius={4}
           shadow-bias={-0.0001}
-          // eslint-disable-next-line react/no-unknown-property
           intensity={0.0}
+          shadow-camera-left={-2.5}
+          shadow-camera-right={2.5}
+          shadow-camera-top={2.5}
+          shadow-camera-bottom={-2.5}
         />
-
         <Environment files={suspend(env) as string} />
 
         <Plane shadowColor={shadowColor} shadowOpacity={shadowOpacity} />
