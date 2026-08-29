@@ -11,7 +11,7 @@ Versions:
 
 To just run directly, `npm install` and then `npm run dev`.
 
-To set up a link to allow live development of `dice` as used by another local project, run `npm install`, `npm run build`, then `npm link` to make the package available locally. To import to another project, run `npm link @trepidacious/dice` in that project, this will add the local build `dice`, it can be imported normally.
+To set up a link to allow live development of `dice` as used by another local project, run `npm install`, `npm run build`, then `npm link` to make the package available locally. To import to another project, run `npm link @mountainlizard/dice` in that project, this will add the local build `dice`, it can be imported normally.
 
 After changing `dice` code, run `npm run build` again, changes should be available in any linked projects immediately.
 
