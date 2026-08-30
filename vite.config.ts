@@ -16,7 +16,7 @@ export default defineConfig({
       // this is the file that exports our components
       entry: resolve(import.meta.dirname, "lib/index.ts"),
       name: "dice",
-      fileName: "dice",
+      fileName: "index",
       formats: ["es"],
     },
     rolldownOptions: {
