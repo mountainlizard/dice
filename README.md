@@ -17,6 +17,17 @@ After changing `dice` code, run `npm run build` again, changes should be availab
 
 Note that this was originally created with `npm create vite@latest` using React and TypeScript options. Configuration files can be updated based on this - most recently this was done with `Oxlint` selected as the linter.
 
+## Publishing
+
+If needed, login with `npm login`
+
+```bash
+npm install
+npm run build
+# Check the dist folder contains expected contents (dice.js, index.d.ts, etc.)
+npm publish --access public
+```
+
 ## Linting
 
 Run `npm run lint` for `oxlint`, you can also run `tsc` for actual TypeScript errors.
