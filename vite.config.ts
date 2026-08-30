@@ -19,11 +19,12 @@ export default defineConfig({
       fileName: "dice",
       formats: ["es"],
     },
-    rollupOptions: {
+    rolldownOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
       external: [
         "react",
+        "react/jsx-runtime",
         "react-dom",
         "@dimforge/rapier3d-compat",
         "@pmndrs/assets",
