@@ -45,8 +45,8 @@
     "oxlint-tsgolint": "^7.0.2001",
     "storybook": "^10.5.10",
     "typescript": "^5.3.3",
-    "vite": "^8.0.0",
-    "vite-plugin-dts": "^3.7.2"
+    "unplugin-dts": "^1.0.3",
+    "vite": "^8.0.0"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,
