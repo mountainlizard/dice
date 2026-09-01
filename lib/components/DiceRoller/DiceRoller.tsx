@@ -149,7 +149,7 @@ const DicePlayback = ({
           const desiredFaceIndex = diceInfo.faceValues.findIndex(
             (faceValue) => faceValue == desiredRoll,
           );
-          if (desiredFaceIndex > -1) {
+          if (desiredFaceIndex > -1 && diceIndex < sim.diceHistories.length) {
             const faceUpIndex = sim.diceHistories[diceIndex].faceUpIndex;
             rotateFaceToFace(
               diceType,
