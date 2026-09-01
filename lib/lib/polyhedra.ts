@@ -614,6 +614,10 @@ export const rotationToFaceUpIndex = (
   return faceUpIndex;
 };
 
+const clampToIndex = (index: number, length: number)=> {
+  return Math.max( 0, Math.min(index, length - 1) );
+}
+
 /**
  * Find the rotation (as a quaternion) to apply so that the specified
  * "from" face will be aligned where the "to" face was before rotation.
@@ -626,8 +630,9 @@ export const rotationToFaceUpIndex = (
  * and 5 was pre-determined to end up on top).
  * @param diceType 		The type of dice, to look up FaceInfo
  * @param faceFrom		The index of the face that will end up where faceTo was
- * 										before rotation
+ * 										before rotation. This is clamped to be a valid face index.
  * @param faceTo			The index of the face that acts as a target for faceFrom
+                      This is clamped to be a valid face index.
  */
 export const rotateFaceToFace = (
   diceType: DiceType,
@@ -637,6 +642,9 @@ export const rotateFaceToFace = (
 ) => {
   const faceInfo = diceSetInfo[diceType].faceInfo;
 
+  faceFrom = clampToIndex(faceFrom, faceInfo.length);
+  faceTo = clampToIndex(faceTo, faceInfo.length);
+  
   // Work out the rotation to place the center of the "from" face
   // at the center of the "to" face.
   const fromFaceCenterNorm = new Vector3();
